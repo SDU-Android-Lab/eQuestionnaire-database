@@ -47,5 +47,31 @@ public class BaseData implements Data {
 	
 	}
 	
+	@Override
+	public void save(SqlHelper helper) {
+	
+	}
+	
+	@Override
+	public void updata(SqlHelper helper) {
+	
+	}
+	
+	@Override
+	public void delete(SqlHelper helper) {
+	
+	}
+	
+	@Override
+	public void query(SqlHelper helper) {
+	
+	}
+	
+	@Override
+	public boolean isExist(SqlHelper helper) {
+	
+		return false;
+	}
+	
 
 }

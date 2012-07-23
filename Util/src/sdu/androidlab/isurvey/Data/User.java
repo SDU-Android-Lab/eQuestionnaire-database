@@ -19,8 +19,6 @@ import sdu.androidlab.isurvey.Database.annotation.Table;
 @Table(name = "user")
 public class User extends BaseData {
 	
-	@Column(name = "uid")
-	int uid;
 	@Column(name = "uname")
 	String uname;
 	@Column(name = "upassword")
@@ -43,7 +41,15 @@ public class User extends BaseData {
 	}
 
 	/**
-	 * @param uid
+	 * 
+	 * @param uname
+	 */
+	public User(String uname) {
+	
+		this.uname = uname;
+	}
+
+	/**
 	 * @param uname
 	 * @param upassword
 	 * @param uemail
@@ -53,11 +59,10 @@ public class User extends BaseData {
 	 * @param utell
 	 * @param point
 	 */
-	public User(int uid, String uname, String upassword, String uemail,
+	public User(String uname, String upassword, String uemail,
 			String uprovince, String ucity, String ustreet, String utell,
 			int point) {
 	
-		this.uid = uid;
 		this.uname = uname;
 		this.upassword = upassword;
 		this.uemail = uemail;
@@ -76,23 +81,6 @@ public class User extends BaseData {
 	public void save(SqlHelper helper, SqlCallback callback) {
 	
 		helper.insert(this, callback);
-	}
-	
-	/**
-	 * @return the uid
-	 */
-	public int getUid() {
-	
-		return uid;
-	}
-	
-	/**
-	 * @param uid
-	 *            the uid to set
-	 */
-	public void setUid(int uid) {
-	
-		this.uid = uid;
 	}
 	
 	/**
@@ -237,9 +225,10 @@ public class User extends BaseData {
 	@Override
 	public String toString() {
 	
-		return "User [uid=" + uid + ", uname=" + uname + ", upassword="
-				+ upassword + ", uemail=" + uemail + ", uprovince=" + uprovince
+		return "User [uname=" + uname + ", upassword=" + upassword
+				+ ", uemail=" + uemail + ", uprovince=" + uprovince
 				+ ", ucity=" + ucity + ", ustreet=" + ustreet + ", utell="
 				+ utell + ", point=" + point + "]";
 	}
+
 }

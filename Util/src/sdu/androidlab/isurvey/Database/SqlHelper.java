@@ -39,102 +39,135 @@ public class SqlHelper {
 					System.out.println(TAG + " Invalid paramaters");
 					return;
 				}
-
-				if (Data.class.isAnnotationPresent(Table.class)) {
-					System.out.println(TAG
-							+ " This class isn't annotated by Table");
-					callback.onError(new SqlError(
-							"This class isn't annotated by Table"));
-				} else {
-					
-					Class<? extends Data> cl = data.getClass();
-					Field[] fields = cl.getDeclaredFields();
-					Table annotation = data.getClass().getAnnotation(
-							Table.class);
-					String table = annotation.name();
-					
-					StringBuilder builder = null;
-					String sql = null;
-					Connection connection = ConnectionManager.getConnection();
-					PreparedStatement statement = null;
-					
-					builder = new StringBuilder("insert into ");
-					builder.append(table);
-					builder.append(" ( ");
-					for (Field field : fields) {
-						if (field.isAnnotationPresent(Column.class)) {
-							Column column = field.getAnnotation(Column.class);
-							builder.append(column.name());
-							builder.append(",");
-						}
+				
+				Class<? extends Data> cl = data.getClass();
+				Field[] fields = cl.getDeclaredFields();
+				Table annotation = data.getClass().getAnnotation(Table.class);
+				String table = annotation.name();
+				
+				StringBuilder builder = null;
+				String sql = null;
+				Connection connection = ConnectionManager.getConnection();
+				PreparedStatement statement = null;
+				
+				builder = new StringBuilder("insert into ");
+				builder.append(table);
+				builder.append(" ( ");
+				for (Field field : fields) {
+					if (field.isAnnotationPresent(Column.class)) {
+						Column column = field.getAnnotation(Column.class);
+						builder.append(column.name());
+						builder.append(",");
 					}
-					builder.deleteCharAt(builder.length() - 1);
-					builder.append(" ) ");
-					builder.append("values( ");
-					for (Field field : fields) {
-						if (field.isAnnotationPresent(Column.class)) {
-							builder.append("?,");
-						}
+				}
+				builder.deleteCharAt(builder.length() - 1);
+				builder.append(" ) ");
+				builder.append("values( ");
+				for (Field field : fields) {
+					if (field.isAnnotationPresent(Column.class)) {
+						builder.append("?,");
 					}
-					builder.deleteCharAt(builder.length() - 1);
-					builder.append(" ); ");
-					sql = builder.toString();
-					System.out.println(TAG + "  " + sql);
-					try {
-						statement = connection.prepareStatement(sql);
-						int i = 1;
-						for (Field field : fields) {
-							if (field.isAnnotationPresent(Column.class)) {
-								try {
-									field.setAccessible(true);
-									Class<?> fieldType = field.getType();
-									if ((Integer.TYPE == fieldType)
-											|| (Integer.class == fieldType)) {
-										statement.setInt(i, field.getInt(data));
-									} else if (String.class == fieldType) {
-										statement.setString(i, field.get(data)
-												.toString());
-									} else if ((Long.TYPE == fieldType)
-											|| (Long.class == fieldType)) {
-										statement.setLong(i,
-												field.getLong(data));
-									} else if ((Float.TYPE == fieldType)
-											|| (Float.class == fieldType)) {
-										statement.setFloat(i,
-												field.getFloat(data));
-									} else if ((Short.TYPE == fieldType)
-											|| (Short.class == fieldType)) {
-										statement.setShort(i,
-												field.getShort(data));
-									} else if ((Double.TYPE == fieldType)
-											|| (Double.class == fieldType)) {
-										statement.setDouble(i,
-												field.getDouble(data));
-									} else if (Date.class == fieldType) {
-										statement.setDate(i,
-												(Date) field.get(data));
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								i++;
-							}
-						}
-						statement.execute();
-						callback.onInsertComplete();
-					} catch (SQLException e) {
-						callback.onError(new SqlError(e));
-					} finally {
-						ConnectionManager.close(connection, statement);
-					}
+				}
+				builder.deleteCharAt(builder.length() - 1);
+				builder.append(" );");
+				sql = builder.toString();
+				System.out.println(TAG + "  " + sql);
+				try {
+					statement = connection.prepareStatement(sql);
+					setValues(fields, data, statement, 1);
+					statement.execute();
+					callback.onInsertComplete();
+				} catch (SQLException e) {
+					callback.onError(new SqlError(e));
+				} finally {
+					ConnectionManager.close(connection, statement);
 				}
 			}
 		};
 		execute(runnable);
 	}
 	
-	public void update(final Data data, final SqlCallback callback) {
+	public void update(final Data oldData, final Data newData,
+			final SqlCallback callback) {
+	
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+			
+				if (oldData == null || newData == null || callback == null) {
+					System.out.println(TAG + " Invalid paramaters");
+					return;
+				}
+				
+				Class<? extends Data> cl = oldData.getClass();
+				Field[] fields = cl.getDeclaredFields();
+				Table annotation = oldData.getClass()
+						.getAnnotation(Table.class);
+				String table = annotation.name();
+				
+				StringBuilder builder = null;
+				String sql = null;
+				Connection connection = ConnectionManager.getConnection();
+				PreparedStatement statement = null;
+				int index = 0;
+				builder = new StringBuilder("updata ");
+				builder.append(table);
+				builder.append(" set ");
+				for (Field field : fields) {
+					if (field.isAnnotationPresent(Column.class)) {
+						Column column = field.getAnnotation(Column.class);
+						builder.append(column.name());
+						builder.append("=?,");
+						index++;
+					}
+				}
+				builder.deleteCharAt(builder.length() - 1);
+				builder.append(" where ");
+				for (Field field : fields) {
+					field.setAccessible(true);
+					if (field.isAnnotationPresent(Column.class)) {
+						Object obj = null;
+						try {
+							obj = field.get(oldData);
+						} catch (IllegalArgumentException
+								| IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						if (obj != null) {
+							Column column = field.getAnnotation(Column.class);
+							builder.append(column.name());
+							builder.append("=?,");
+						}
+					}
+				}
+				builder.deleteCharAt(builder.length() - 1);
+				builder.append(" ;");
+				sql = builder.toString();
+				System.out.println(TAG + "  " + sql);
+				try {
+					statement = connection.prepareStatement(sql);
+					setValues(fields, newData, statement, 1);
+					setValuesNotNull(fields, oldData, statement, index);
+					statement.execute();
+					callback.onInsertComplete();
+				} catch (SQLException e) {
+					callback.onError(new SqlError(e));
+				} finally {
+					ConnectionManager.close(connection, statement);
+				}
+			}
 
+		};
+		execute(runnable);
+	}
+	
+	public void delete(final Data data, final SqlCallback callback) {
+
+	}
+	
+	public void isExist(final Data data, final SqlCallback callback) {
+	
 	}
 
 	public void execute(final String sql, final SqlCallback callback) {
@@ -167,5 +200,85 @@ public class SqlHelper {
 	
 		executorService.execute(runnable);
 	}
-
+	
+	private void setValues(Field[] fields, Data data,
+			PreparedStatement statement, int i) {
+	
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Column.class)) {
+				try {
+					field.setAccessible(true);
+					Class<?> fieldType = field.getType();
+					if ((Integer.TYPE == fieldType)
+							|| (Integer.class == fieldType)) {
+						statement.setInt(i, field.getInt(data));
+					} else if (String.class == fieldType) {
+						statement.setString(i, field.get(data).toString());
+					} else if ((Long.TYPE == fieldType)
+							|| (Long.class == fieldType)) {
+						statement.setLong(i, field.getLong(data));
+					} else if ((Float.TYPE == fieldType)
+							|| (Float.class == fieldType)) {
+						statement.setFloat(i, field.getFloat(data));
+					} else if ((Short.TYPE == fieldType)
+							|| (Short.class == fieldType)) {
+						statement.setShort(i, field.getShort(data));
+					} else if ((Double.TYPE == fieldType)
+							|| (Double.class == fieldType)) {
+						statement.setDouble(i, field.getDouble(data));
+					} else if (Date.class == fieldType) {
+						statement.setDate(i, (Date) field.get(data));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				i++;
+			}
+		}
+	}
+	
+	public void setValuesNotNull(Field[] fields, Data data,
+			PreparedStatement statement, int i) {
+	
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Column.class)) {
+				try {
+					field.setAccessible(true);
+					Object obj = null;
+					try {
+						obj = field.get(data);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						e.printStackTrace();
+					}
+					if (obj != null) {
+						Class<?> fieldType = field.getType();
+						if ((Integer.TYPE == fieldType)
+								|| (Integer.class == fieldType)) {
+							statement.setInt(i, field.getInt(data));
+						} else if (String.class == fieldType) {
+							statement.setString(i, field.get(data).toString());
+						} else if ((Long.TYPE == fieldType)
+								|| (Long.class == fieldType)) {
+							statement.setLong(i, field.getLong(data));
+						} else if ((Float.TYPE == fieldType)
+								|| (Float.class == fieldType)) {
+							statement.setFloat(i, field.getFloat(data));
+						} else if ((Short.TYPE == fieldType)
+								|| (Short.class == fieldType)) {
+							statement.setShort(i, field.getShort(data));
+						} else if ((Double.TYPE == fieldType)
+								|| (Double.class == fieldType)) {
+							statement.setDouble(i, field.getDouble(data));
+						} else if (Date.class == fieldType) {
+							statement.setDate(i, (Date) field.get(data));
+						}
+						i++;
+					}
+				} catch (Exception e) {
+					i++;
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }

@@ -10,10 +10,6 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import sdu.androidlab.isurvey.Data.Data;
-import sdu.androidlab.isurvey.Data.User;
-import sdu.androidlab.isurvey.Database.SqlHelper;
-
 /**
  * @author zhenzxie
  *
@@ -26,9 +22,9 @@ public class SqlHelperTest extends TestCase {
 	@Test
 	public final void testInsert() {
 	
-		SqlHelper helper = new SqlHelper();
-		Data data = new User(1, "zhenz", "123456", "1234567", "fujian",
-				"quanzhou", "kengzikou", "12345", 100);
+		// SqlHelper helper = new SqlHelper();
+		// Data data = new User(1, "zhenz", "123456", "1234567", "fujian",
+		// "quanzhou", "kengzikou", "12345", 100);
 		// data.save(helper);
 	}
 	

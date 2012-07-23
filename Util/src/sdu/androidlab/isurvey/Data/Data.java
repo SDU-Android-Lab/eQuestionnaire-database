@@ -8,10 +8,9 @@ package sdu.androidlab.isurvey.Data;
 import sdu.androidlab.isurvey.Database.SqlCallback;
 import sdu.androidlab.isurvey.Database.SqlHelper;
 
-
 /**
  * @author zhenzxie
- *
+ * 
  */
 public interface Data {
 	
@@ -45,5 +44,15 @@ public interface Data {
 	public void delete(SqlHelper helper, SqlCallback callback);
 	
 	public void query(SqlHelper helper, SqlCallback callback);
+	
+	public void save(SqlHelper helper);
+	
+	public void updata(SqlHelper helper);
+	
+	public void delete(SqlHelper helper);
+	
+	public void query(SqlHelper helper);
+
+	public boolean isExist(SqlHelper helper);
 
 }
