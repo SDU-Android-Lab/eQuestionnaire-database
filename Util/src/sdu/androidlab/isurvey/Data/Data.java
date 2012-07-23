@@ -38,6 +38,12 @@ public interface Data {
 	 * @param helper
 	 * @return
 	 */
-	public boolean save(SqlHelper helper, SqlCallback callback);
+	public void save(SqlHelper helper, SqlCallback callback);
+	
+	public void updata(SqlHelper helper, SqlCallback callback);
+	
+	public void delete(SqlHelper helper, SqlCallback callback);
+	
+	public void query(SqlHelper helper, SqlCallback callback);
 
 }

@@ -73,9 +73,9 @@ public class User extends BaseData {
 	 *      sdu.androidlab.isurvey.Database.SqlCallback)
 	 */
 	@Override
-	public boolean save(SqlHelper helper, SqlCallback callback) {
+	public void save(SqlHelper helper, SqlCallback callback) {
 	
-		return super.save(helper, callback);
+		helper.insert(this, callback);
 	}
 	
 	/**

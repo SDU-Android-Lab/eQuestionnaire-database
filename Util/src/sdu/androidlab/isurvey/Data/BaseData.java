@@ -14,29 +14,38 @@ import sdu.androidlab.isurvey.Database.SqlHelper;
  *
  */
 public class BaseData implements Data {
-	
-	/**
-	 * @see sdu.androidlab.isurvey.Data.Data#valueOfKey(sdu.androidlab.isurvey.Database.SqlHelper, java.lang.String)
-	 */
+
 	@Override
 	public Object valueOfKey(SqlHelper helper, String key) {
 	
 		return null;
 	}
-	
-	/**
-	 * @see sdu.androidlab.isurvey.Data.Data#valuesOfkeys(sdu.androidlab.isurvey.Database.SqlHelper, java.lang.String[])
-	 */
+
 	@Override
 	public Object[] valuesOfkeys(SqlHelper helper, String[] keys) {
 	
 		return null;
 	}
-	
+
 	@Override
-	public boolean save(SqlHelper helper, SqlCallback callback) {
+	public void save(SqlHelper helper, SqlCallback callback) {
 	
-		return false;
+	}
+
+	@Override
+	public void updata(SqlHelper helper, SqlCallback callback) {
+	
+	}
+
+	@Override
+	public void delete(SqlHelper helper, SqlCallback callback) {
+	
+	}
+
+	@Override
+	public void query(SqlHelper helper, SqlCallback callback) {
+	
 	}
 	
+
 }
