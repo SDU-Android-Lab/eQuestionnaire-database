@@ -5,6 +5,7 @@
  */
 package sdu.androidlab.isurvey.Data;
 
+import sdu.androidlab.isurvey.Database.SqlCallback;
 import sdu.androidlab.isurvey.Database.SqlHelper;
 
 
@@ -37,6 +38,6 @@ public interface Data {
 	 * @param helper
 	 * @return
 	 */
-	public boolean save(SqlHelper helper);
+	public boolean save(SqlHelper helper, SqlCallback callback);
 
 }

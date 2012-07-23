@@ -24,7 +24,7 @@ public class Test {
 		SqlHelper helper = new SqlHelper();
 		Data data = new User(13, "zhenz", "123456", "1234567", "fujian",
 				"quanzhou", "kengzikou", "12345", 100);
-		data.save(helper);
+		// data.save(helper);
 	}
 	
 }

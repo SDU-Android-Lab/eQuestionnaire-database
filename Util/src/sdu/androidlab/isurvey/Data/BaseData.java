@@ -5,6 +5,7 @@
  */
 package sdu.androidlab.isurvey.Data;
 
+import sdu.androidlab.isurvey.Database.SqlCallback;
 import sdu.androidlab.isurvey.Database.SqlHelper;
 
 
@@ -32,11 +33,8 @@ public class BaseData implements Data {
 		return null;
 	}
 	
-	/**
-	 * @see sdu.androidlab.isurvey.Data.Data#save(sdu.androidlab.isurvey.Database.SqlHelper)
-	 */
 	@Override
-	public boolean save(SqlHelper helper) {
+	public boolean save(SqlHelper helper, SqlCallback callback) {
 	
 		return false;
 	}

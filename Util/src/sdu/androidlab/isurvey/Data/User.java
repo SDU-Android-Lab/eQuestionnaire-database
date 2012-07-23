@@ -5,10 +5,7 @@
  */
 package sdu.androidlab.isurvey.Data;
 
-import java.sql.ResultSet;
-
 import sdu.androidlab.isurvey.Database.SqlCallback;
-import sdu.androidlab.isurvey.Database.SqlError;
 import sdu.androidlab.isurvey.Database.SqlHelper;
 import sdu.androidlab.isurvey.Database.annotation.Column;
 import sdu.androidlab.isurvey.Database.annotation.Table;
@@ -70,15 +67,15 @@ public class User extends BaseData {
 		this.utell = utell;
 		this.point = point;
 	}
-
+	
 	/**
-	 * @see sdu.androidlab.isurvey.Data.BaseData#save(sdu.androidlab.isurvey.Database.SqlHelper)
+	 * @see sdu.androidlab.isurvey.Data.BaseData#save(sdu.androidlab.isurvey.Database.SqlHelper,
+	 *      sdu.androidlab.isurvey.Database.SqlCallback)
 	 */
 	@Override
-	public boolean save(SqlHelper helper) {
+	public boolean save(SqlHelper helper, SqlCallback callback) {
 	
-		helper.insert(this, new usercall());
-		return true;
+		return super.save(helper, callback);
 	}
 	
 	/**
@@ -245,41 +242,4 @@ public class User extends BaseData {
 				+ ", ucity=" + ucity + ", ustreet=" + ustreet + ", utell="
 				+ utell + ", point=" + point + "]";
 	}
-
-	class usercall implements SqlCallback {
-		
-		@Override
-		public void onInsertComplete() {
-		
-			System.out.println("success");
-		}
-		
-		@Override
-		public void onUpdataComplete() {
-		
-		}
-		
-		@Override
-		public void onQueryComplete() {
-		
-		}
-		
-		@Override
-		public void onDeleteComplete() {
-		
-		}
-		
-		@Override
-		public void onSqlExecuteComplete(ResultSet resultSet) {
-		
-		}
-		
-		@Override
-		public void onError(SqlError error) {
-		
-			error.exception.printStackTrace();
-		}
-		
-	}
-
 }
