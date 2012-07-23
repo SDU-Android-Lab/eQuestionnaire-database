@@ -137,11 +137,11 @@ public class SqlHelper {
 						if (obj != null) {
 							Column column = field.getAnnotation(Column.class);
 							builder.append(column.name());
-							builder.append("=?,");
+							builder.append("= ? and ");
 						}
 					}
 				}
-				builder.deleteCharAt(builder.length() - 1);
+				builder.delete(builder.length() - 4, builder.length() - 1);
 				builder.append(" ;");
 				sql = builder.toString();
 				System.out.println(TAG + "  " + sql);
@@ -163,11 +163,127 @@ public class SqlHelper {
 	}
 	
 	public void delete(final Data data, final SqlCallback callback) {
+	
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+			
+				if (data == null || callback == null) {
+					System.out.println(TAG + " Invalid paramaters");
+					return;
+				}
+				
+				Class<? extends Data> cl = data.getClass();
+				Field[] fields = cl.getDeclaredFields();
+				Table annotation = data.getClass().getAnnotation(Table.class);
+				String table = annotation.name();
+				
+				StringBuilder builder = null;
+				String sql = null;
+				Connection connection = ConnectionManager.getConnection();
+				PreparedStatement statement = null;
+				
+				builder = new StringBuilder("delete from ");
+				builder.append(table);
+				builder.append(" where ");
+				for (Field field : fields) {
+					if (field.isAnnotationPresent(Column.class)) {
+						
+						Object obj = null;
+						try {
+							obj = field.get(data);
+						} catch (IllegalArgumentException
+								| IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						if (obj != null) {
+							Column column = field.getAnnotation(Column.class);
+							builder.append(column.name());
+							builder.append("= ? and ");
+						}
+					}
+				}
+				builder.delete(builder.length() - 4, builder.length() - 1);
+				builder.append(" ;");
 
+				sql = builder.toString();
+				System.out.println(TAG + "  " + sql);
+				try {
+					statement = connection.prepareStatement(sql);
+					setValuesNotNull(fields, data, statement, 1);
+					statement.execute();
+					callback.onInsertComplete();
+				} catch (SQLException e) {
+					callback.onError(new SqlError(e));
+				} finally {
+					ConnectionManager.close(connection, statement);
+				}
+			}
+		};
+		execute(runnable);
 	}
 	
-	public void isExist(final Data data, final SqlCallback callback) {
+	public boolean isExist(Data data) {
 	
+		if (data == null) {
+			System.out.println(TAG + " Invalid paramaters");
+			return false;
+		}
+		
+		Class<? extends Data> cl = data.getClass();
+		Field[] fields = cl.getDeclaredFields();
+		Table annotation = data.getClass().getAnnotation(Table.class);
+		String table = annotation.name();
+		
+		StringBuilder builder = null;
+		String sql = null;
+		Connection connection = ConnectionManager.getConnection();
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		builder = new StringBuilder("select count(*) from ");
+		builder.append(table);
+		builder.append(" where ");
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Column.class)) {
+				
+				Object obj = null;
+				try {
+					obj = field.get(data);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				if (obj != null) {
+					Column column = field.getAnnotation(Column.class);
+					builder.append(column.name());
+					builder.append("= ? and ");
+				}
+			}
+		}
+		builder.delete(builder.length() - 4, builder.length() - 1);
+		builder.append(" ;");
+		sql = builder.toString();
+		System.out.println(TAG + "  " + sql);
+		try {
+			statement = connection.prepareStatement(sql);
+			setValuesNotNull(fields, data, statement, 1);
+			boolean temp = statement.execute();
+			if (temp) {
+				resultSet = statement.getResultSet();
+				int count = resultSet.getInt(1);
+				if (count >= 1)
+					return true;
+				else
+					return false;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			return false;
+		} finally {
+			ConnectionManager.close(connection, statement, resultSet);
+		}
 	}
 
 	public void execute(final String sql, final SqlCallback callback) {

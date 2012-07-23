@@ -44,9 +44,10 @@ public class User extends BaseData {
 	 * 
 	 * @param uname
 	 */
-	public User(String uname) {
+	public User(String uname, String upassword) {
 	
 		this.uname = uname;
+		this.upassword = upassword;
 	}
 
 	/**
