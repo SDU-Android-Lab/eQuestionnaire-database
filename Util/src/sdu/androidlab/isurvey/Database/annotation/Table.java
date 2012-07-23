@@ -12,11 +12,11 @@ import java.lang.annotation.Target;
 
 /**
  * @author zhenzxie
- *
+ * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 public @interface Table {
 	
-	public abstract String[] tables();
+	public abstract String name();
 }
