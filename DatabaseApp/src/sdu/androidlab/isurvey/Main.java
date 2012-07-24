@@ -1,24 +1,22 @@
 package sdu.androidlab.isurvey;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.BorderLayout;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import org.pushingpixels.substance.api.skin.SubstanceBusinessBlueSteelLookAndFeel;
+import org.jvnet.substance.skin.SubstanceNebulaLookAndFeel;
 
 public class Main extends JFrame {
 	
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     * 
+     */
+	private static final long serialVersionUID = 7553840264354930341L;
 	private JPanel contentPane;
 	
 	/**
@@ -26,12 +24,11 @@ public class Main extends JFrame {
 	 */
 	public static void main(String[] args) {
 	
-		// JFrame.setDefaultLookAndFeelDecorated(true);
-		// JDialog.setDefaultLookAndFeelDecorated(true);
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
 		
 		try {
-			UIManager
-					.setLookAndFeel(new SubstanceBusinessBlueSteelLookAndFeel());
+			UIManager.setLookAndFeel(new SubstanceNebulaLookAndFeel());
 		} catch (Exception e) {
 			System.out.println("Substance Raven Graphite failed to initialize");
 		}
@@ -39,10 +36,12 @@ public class Main extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			public void run() {
+			
 				Main frame = new Main();
 				frame.setVisible(true);
 			}
 		});
+
 	}
 	
 	/**
@@ -54,21 +53,8 @@ public class Main extends JFrame {
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 0, 0, 183, 183, 0 };
-		gbl_contentPane.rowHeights = new int[] { 0, 0, 0 };
-		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 1.0, 1.0,
-				Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-		contentPane.setLayout(gbl_contentPane);
-		
-		JLabel lblNewLabel = new JLabel("New label");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel.gridx = 1;
-		gbc_lblNewLabel.gridy = 1;
-		contentPane.add(lblNewLabel, gbc_lblNewLabel);
 	}
 	
 }

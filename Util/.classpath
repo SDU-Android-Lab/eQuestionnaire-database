@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="/home/zhenzxie/文档/useful_jar/hibernate/mysql-connector-java-5.1.21/mysql-connector-java-5.1.21-bin.jar" sourcepath="/home/zhenzxie/文档/useful_jar/hibernate/mysql-connector-java-5.1.21/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="F:/小虫学习/有用的jar包/java/mysql-connector/mysql-connector-java-5.1.21/mysql-connector-java-5.1.21-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
