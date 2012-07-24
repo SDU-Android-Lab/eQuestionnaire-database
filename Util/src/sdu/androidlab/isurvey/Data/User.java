@@ -85,6 +85,24 @@ public class User extends BaseData {
 	}
 	
 	/**
+	 * @see sdu.androidlab.isurvey.Data.BaseData#save(sdu.androidlab.isurvey.Database.SqlHelper)
+	 */
+	@Override
+	public boolean save(SqlHelper helper) {
+	
+		return helper.insert(this);
+	}
+
+	/**
+	 * @see sdu.androidlab.isurvey.Data.BaseData#isExist(sdu.androidlab.isurvey.Database.SqlHelper)
+	 */
+	@Override
+	public boolean isExist(SqlHelper helper) {
+	
+		return helper.isExist(this);
+	}
+	
+	/**
 	 * @return the uname
 	 */
 	public String getUname() {

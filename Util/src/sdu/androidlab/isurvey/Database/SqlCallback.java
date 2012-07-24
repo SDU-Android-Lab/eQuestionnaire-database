@@ -6,6 +6,10 @@
 package sdu.androidlab.isurvey.Database;
 
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.List;
+
+import sdu.androidlab.isurvey.Data.Data;
 
 /**
  * @author zhenzxie
@@ -17,11 +21,13 @@ public interface SqlCallback {
 	
 	public void onUpdataComplete();
 	
-	public void onQueryComplete();
+	public void onQueryComplete(List<Data> dataList);
 	
+	public void onQueryMultiTableComplete(List<HashMap<String, Object>> dataList);
+
 	public void onDeleteComplete();
 	
-	public void onSqlExecuteComplete(ResultSet resultSet);
+	public void onSqlExecuteComplete(final ResultSet resultSet);
 
 	public void onError(SqlError error);
 

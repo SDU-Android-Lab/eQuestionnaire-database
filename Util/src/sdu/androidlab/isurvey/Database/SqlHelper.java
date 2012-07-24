@@ -12,6 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,14 +23,65 @@ import sdu.androidlab.isurvey.Database.annotation.Column;
 import sdu.androidlab.isurvey.Database.annotation.Table;
 
 /**
- * @author zhenzxie
- * 
+ * @author zhenzxie TODO:int 使用默认值，包装成Integer 时会是null吗？
  */
 public class SqlHelper {
 	
 	public static final String TAG = "SqlHelper";
 	static ExecutorService executorService = Executors.newFixedThreadPool(5);
 	
+	public boolean insert(Data data) {
+	
+		if (data == null) {
+			System.out.println(TAG + " Invalid paramaters");
+			return false;
+		}
+		
+		Class<? extends Data> cl = data.getClass();
+		Field[] fields = cl.getDeclaredFields();
+		Table annotation = data.getClass().getAnnotation(Table.class);
+		String table = annotation.name();
+		
+		StringBuilder builder = null;
+		String sql = null;
+		Connection connection = ConnectionManager.getConnection();
+		PreparedStatement statement = null;
+		
+		builder = new StringBuilder("insert into ");
+		builder.append(table);
+		builder.append(" ( ");
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Column.class)) {
+				Column column = field.getAnnotation(Column.class);
+				builder.append(column.name());
+				builder.append(",");
+			}
+		}
+		builder.deleteCharAt(builder.length() - 1);
+		builder.append(" ) ");
+		builder.append("values( ");
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Column.class)) {
+				builder.append("?,");
+			}
+		}
+		builder.deleteCharAt(builder.length() - 1);
+		builder.append(" );");
+		sql = builder.toString();
+		System.out.println(TAG + "  " + sql);
+		try {
+			statement = connection.prepareStatement(sql);
+			setValues(fields, data, statement, 1);
+			statement.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			ConnectionManager.close(connection, statement);
+		}
+	}
+
 	public void insert(final Data data, final SqlCallback callback) {
 	
 		Runnable runnable = new Runnable() {
@@ -87,6 +141,71 @@ public class SqlHelper {
 		execute(runnable);
 	}
 	
+	public boolean updata(Data oldData, Data newData) {
+	
+		if (oldData == null || newData == null) {
+			System.out.println(TAG + " Invalid paramaters");
+			return false;
+		}
+		
+		Class<? extends Data> cl = oldData.getClass();
+		Field[] fields = cl.getDeclaredFields();
+		Table annotation = oldData.getClass().getAnnotation(Table.class);
+		String table = annotation.name();
+		
+		StringBuilder builder = null;
+		String sql = null;
+		Connection connection = ConnectionManager.getConnection();
+		PreparedStatement statement = null;
+		int index = 0;
+		builder = new StringBuilder("updata ");
+		builder.append(table);
+		builder.append(" set ");
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Column.class)) {
+				Column column = field.getAnnotation(Column.class);
+				builder.append(column.name());
+				builder.append("=?,");
+				index++;
+			}
+		}
+		builder.deleteCharAt(builder.length() - 1);
+		builder.append(" where ");
+		for (Field field : fields) {
+			field.setAccessible(true);
+			if (field.isAnnotationPresent(Column.class)) {
+				Object obj = null;
+				try {
+					obj = field.get(oldData);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				if (obj != null) {
+					Column column = field.getAnnotation(Column.class);
+					builder.append(column.name());
+					builder.append("= ? and ");
+				}
+			}
+		}
+		builder.delete(builder.length() - 4, builder.length() - 1);
+		builder.append(" ;");
+		sql = builder.toString();
+		System.out.println(TAG + "  " + sql);
+		try {
+			statement = connection.prepareStatement(sql);
+			setValues(fields, newData, statement, 1);
+			setValuesNotNull(fields, oldData, statement, index);
+			statement.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			ConnectionManager.close(connection, statement);
+		}
+
+	}
+
 	public void update(final Data oldData, final Data newData,
 			final SqlCallback callback) {
 	
@@ -150,7 +269,7 @@ public class SqlHelper {
 					setValues(fields, newData, statement, 1);
 					setValuesNotNull(fields, oldData, statement, index);
 					statement.execute();
-					callback.onInsertComplete();
+					callback.onUpdataComplete();
 				} catch (SQLException e) {
 					callback.onError(new SqlError(e));
 				} finally {
@@ -160,6 +279,61 @@ public class SqlHelper {
 
 		};
 		execute(runnable);
+	}
+	
+	public boolean delete(Data data) {
+	
+		if (data == null) {
+			System.out.println(TAG + " Invalid paramaters");
+			return false;
+		}
+		
+		Class<? extends Data> cl = data.getClass();
+		Field[] fields = cl.getDeclaredFields();
+		Table annotation = data.getClass().getAnnotation(Table.class);
+		String table = annotation.name();
+		
+		StringBuilder builder = null;
+		String sql = null;
+		Connection connection = ConnectionManager.getConnection();
+		PreparedStatement statement = null;
+		
+		builder = new StringBuilder("delete from ");
+		builder.append(table);
+		builder.append(" where ");
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Column.class)) {
+				
+				Object obj = null;
+				try {
+					obj = field.get(data);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				if (obj != null) {
+					Column column = field.getAnnotation(Column.class);
+					builder.append(column.name());
+					builder.append("= ? and ");
+				}
+			}
+		}
+		builder.delete(builder.length() - 4, builder.length() - 1);
+		builder.append(" ;");
+
+		sql = builder.toString();
+		System.out.println(TAG + "  " + sql);
+		try {
+			statement = connection.prepareStatement(sql);
+			setValuesNotNull(fields, data, statement, 1);
+			statement.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			ConnectionManager.close(connection, statement);
+		}
+
 	}
 	
 	public void delete(final Data data, final SqlCallback callback) {
@@ -213,7 +387,7 @@ public class SqlHelper {
 					statement = connection.prepareStatement(sql);
 					setValuesNotNull(fields, data, statement, 1);
 					statement.execute();
-					callback.onInsertComplete();
+					callback.onDeleteComplete();
 				} catch (SQLException e) {
 					callback.onError(new SqlError(e));
 				} finally {
@@ -286,6 +460,146 @@ public class SqlHelper {
 		}
 	}
 
+	public void query(final Data data, final SqlCallback callback) {
+	
+		Runnable runnable = new Runnable() {
+			
+			@SuppressWarnings("null")
+			@Override
+			public void run() {
+			
+				if (data == null || callback == null) {
+					System.out.println(TAG + " Invalid paramaters");
+					return;
+				}
+				
+				Class<? extends Data> cl = data.getClass();
+				Field[] fields = cl.getDeclaredFields();
+				Table annotation = data.getClass().getAnnotation(Table.class);
+				String table = annotation.name();
+				
+				StringBuilder builder = null;
+				String sql = null;
+				Connection connection = ConnectionManager.getConnection();
+				PreparedStatement statement = null;
+				ResultSet resultSet = null;
+				
+				builder = new StringBuilder("select * from ");
+				builder.append(table);
+				builder.append(" where ");
+				for (Field field : fields) {
+					if (field.isAnnotationPresent(Column.class)) {
+						
+						Object obj = null;
+						try {
+							obj = field.get(data);
+						} catch (IllegalArgumentException
+								| IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						if (obj != null) {
+							Column column = field.getAnnotation(Column.class);
+							builder.append(column.name());
+							builder.append("= ? and ");
+						}
+					}
+				}
+				builder.delete(builder.length() - 4, builder.length() - 1);
+				builder.append(" ;");
+				sql = builder.toString();
+				System.out.println(TAG + "  " + sql);
+				try {
+					statement = connection.prepareStatement(sql);
+					setValuesNotNull(fields, data, statement, 1);
+					boolean temp = statement.execute();
+					List<Data> dataList = null;
+					Data data = null;
+					if (temp) {
+						resultSet = statement.getResultSet();
+						if (resultSet.first()) {
+							do {
+								try {
+									data = cl.newInstance();
+									if (data.fillData(resultSet)) {
+										dataList.add(data);
+									}
+								} catch (InstantiationException
+										| IllegalAccessException e) {
+									e.printStackTrace();
+									callback.onError(new SqlError(e));
+								}
+							} while (resultSet.next());
+						}
+					}
+					callback.onQueryComplete(dataList);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					callback.onError(new SqlError(e));
+				} finally {
+					ConnectionManager.close(connection, statement, resultSet);
+				}
+			}
+		};
+		execute(runnable);
+	}
+	
+	/**
+	 * multi table query
+	 * 
+	 * @param sql
+	 *            为 select 语句
+	 * @param callback
+	 *            回调接口
+	 * @param keys
+	 *            长度和顺序和sql中的投影的列一致
+	 * 
+	 */
+	public void queryMultiTableComplete(final String sql,
+			final SqlCallback callback, final String[] keys) {
+	
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+			
+				if (sql == null || callback == null || keys == null) {
+					System.out.println(TAG + " Invalid paramaters");
+					return;
+				}
+				
+				Connection connection = ConnectionManager.getConnection();
+				Statement statement = null;
+				ResultSet resultSet = null;
+				List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+				HashMap<String, Object> map = null;
+				
+				try {
+					statement = connection.createStatement();
+					boolean temp = statement.execute(sql);
+					if (temp) {
+						resultSet = statement.getResultSet();
+						if (resultSet.first()) {
+							do {
+								map = new HashMap<String, Object>();
+								int i = 1;
+								for (String key : keys) {
+									map.put(key, resultSet.getObject(i++));
+								}
+							} while (resultSet.next());
+						}
+					}
+					callback.onQueryMultiTableComplete(list);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					callback.onError(new SqlError(e));
+				} finally {
+					ConnectionManager.close(connection, statement, resultSet);
+				}
+			}
+		};
+		execute(runnable);
+	}
+
 	public void execute(final String sql, final SqlCallback callback) {
 	
 		Runnable runnable = new Runnable() {
@@ -317,6 +631,7 @@ public class SqlHelper {
 		executorService.execute(runnable);
 	}
 	
+
 	private void setValues(Field[] fields, Data data,
 			PreparedStatement statement, int i) {
 	
@@ -353,7 +668,8 @@ public class SqlHelper {
 		}
 	}
 	
-	public void setValuesNotNull(Field[] fields, Data data,
+
+	private void setValuesNotNull(Field[] fields, Data data,
 			PreparedStatement statement, int i) {
 	
 		for (Field field : fields) {

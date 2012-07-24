@@ -5,6 +5,8 @@
  */
 package sdu.androidlab.isurvey.Data;
 
+import java.sql.ResultSet;
+
 import sdu.androidlab.isurvey.Database.SqlCallback;
 import sdu.androidlab.isurvey.Database.SqlHelper;
 
@@ -48,30 +50,33 @@ public class BaseData implements Data {
 	}
 	
 	@Override
-	public void save(SqlHelper helper) {
-	
-	}
-	
-	@Override
-	public void updata(SqlHelper helper) {
-	
-	}
-	
-	@Override
-	public void delete(SqlHelper helper) {
-	
-	}
-	
-	@Override
-	public void query(SqlHelper helper) {
-	
-	}
-	
-	@Override
 	public boolean isExist(SqlHelper helper) {
 	
 		return false;
 	}
 	
+	@Override
+	public boolean save(SqlHelper helper) {
+	
+		return false;
+	}
+	
+	@Override
+	public boolean updata(SqlHelper helper) {
+	
+		return false;
+	}
+	
+	@Override
+	public boolean delete(SqlHelper helper) {
+	
+		return false;
+	}
+
+	@Override
+	public boolean fillData(ResultSet resultSet) {
+	
+		return false;
+	}
 
 }

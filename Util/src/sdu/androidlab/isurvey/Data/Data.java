@@ -5,6 +5,8 @@
  */
 package sdu.androidlab.isurvey.Data;
 
+import java.sql.ResultSet;
+
 import sdu.androidlab.isurvey.Database.SqlCallback;
 import sdu.androidlab.isurvey.Database.SqlHelper;
 
@@ -30,7 +32,15 @@ public interface Data {
 	 * @return
 	 */
 	public Object[] valuesOfkeys(SqlHelper helper, String[] keys);
-	
+
+	/**
+	 * get the value from ResultSet to fill this data
+	 * 
+	 * @param resultSet
+	 * @return true if this operation done,false otherwise;
+	 */
+	public boolean fillData(final ResultSet resultSet);
+
 	/**
 	 * save this data,write it to database;
 	 * 
@@ -45,13 +55,11 @@ public interface Data {
 	
 	public void query(SqlHelper helper, SqlCallback callback);
 	
-	public void save(SqlHelper helper);
+	public boolean save(SqlHelper helper);
 	
-	public void updata(SqlHelper helper);
+	public boolean updata(SqlHelper helper);
 	
-	public void delete(SqlHelper helper);
-	
-	public void query(SqlHelper helper);
+	public boolean delete(SqlHelper helper);
 
 	public boolean isExist(SqlHelper helper);
 

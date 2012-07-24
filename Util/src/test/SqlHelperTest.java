@@ -34,7 +34,7 @@ public class SqlHelperTest extends TestCase {
 	@Test
 	public final void testExecute() {
 	
-		// fail("Not yet implemented"); // TODO
+		// fail("Not yet implemented");
 	}
 	
 }

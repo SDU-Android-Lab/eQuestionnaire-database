@@ -12,8 +12,7 @@ import sdu.androidlab.isurvey.Database.SqlHelper;
 
 
 /**
- * @author zhenzxie
- *
+ * @author zhenzxie 这个接口好像不太需要。。。
  */
 public interface DataSet {
 	
