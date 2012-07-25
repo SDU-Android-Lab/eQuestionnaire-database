@@ -1,4 +1,4 @@
-package sdu.androidlab.isurvey;
+package sdu.androidlab.isurvey.UI;
 
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
@@ -81,7 +81,7 @@ public class AccountFrame extends JInternalFrame {
 		gbc_lblid.gridy = 1;
 		contentPanel.add(lblid, gbc_lblid);
 		
-		JComboBox comboBox = new JComboBox();
+		JComboBox<String> comboBox = new JComboBox<String>();
 		comboBox.setEditable(true);
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;

@@ -1,4 +1,4 @@
-package sdu.androidlab.isurvey;
+package sdu.androidlab.isurvey.UI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -18,7 +18,6 @@ public class PersonnelFrame extends JInternalFrame {
      */
 	private static final long serialVersionUID = -443130469672678264L;
 	private JButton btnadd;
-	private JButton btnlook;
 	private JButton btndelete;
 	private JScrollPane scrollPane;
 	private JTable table;
@@ -56,25 +55,10 @@ public class PersonnelFrame extends JInternalFrame {
 
 		setClosable(true);
 
-		setBounds(100, 100, 484, 227);
+		setBounds(100, 100, 818, 227);
 		JPanel contentPanel = new JPanel();
 		setContentPane(contentPanel);
 		contentPanel.setLayout(new BorderLayout(0, 0));
-		
-		JPanel panel = new JPanel();
-		contentPanel.add(panel, BorderLayout.NORTH);
-		
-		btnlook = new JButton("\u67E5\u770B");
-		btnlook.setFont(new Font("华文行楷", Font.PLAIN, 16));
-		panel.add(btnlook);
-		
-		btnadd = new JButton("\u6DFB\u52A0");
-		btnadd.setFont(new Font("华文行楷", Font.PLAIN, 16));
-		panel.add(btnadd);
-		
-		btndelete = new JButton("\u5220\u9664");
-		btndelete.setFont(new Font("华文行楷", Font.PLAIN, 16));
-		panel.add(btndelete);
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
@@ -97,6 +81,17 @@ public class PersonnelFrame extends JInternalFrame {
 		                "\u57CE\u5E02", "街道", "电话", "工资", "所属管理员Id", }));
 		scrollPane = new JScrollPane(table);
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
+		
+		JPanel panel = new JPanel();
+		contentPanel.add(panel, BorderLayout.SOUTH);
+		
+		btnadd = new JButton("\u6DFB\u52A0");
+		btnadd.setFont(new Font("华文行楷", Font.PLAIN, 16));
+		panel.add(btnadd);
+		
+		btndelete = new JButton("\u5220\u9664");
+		btndelete.setFont(new Font("华文行楷", Font.PLAIN, 16));
+		panel.add(btndelete);
 
 	}
 	

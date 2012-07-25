@@ -1,11 +1,16 @@
-package sdu.androidlab.isurvey;
+package sdu.androidlab.isurvey.UI;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -68,9 +73,38 @@ public class ClientFrame extends JInternalFrame {
 		                "\u516C\u53F8\u9886\u57DF", "\u90AE\u7BB1",
 		                "\u7701\u4EFD", "\u57CE\u5E02", "\u8857\u9053",
 		                "\u8054\u7CFB\u7535\u8BDD" }));
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		JScrollPane scrollPane = new JScrollPane(table);
+		
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(table, popupMenu);
+		
+		JMenuItem menuItem = new JMenuItem("\u67E5\u770B\u95EE\u5377");
+		popupMenu.add(menuItem);
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
 	}
 	
+	private static void addPopup(Component component, final JPopupMenu popup) {
+	
+		component.addMouseListener(new MouseAdapter() {
+			
+			public void mousePressed(MouseEvent e) {
+			
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			
+			public void mouseReleased(MouseEvent e) {
+			
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			
+			private void showMenu(MouseEvent e) {
+			
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }

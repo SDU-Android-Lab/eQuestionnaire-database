@@ -1,4 +1,4 @@
-package sdu.androidlab.isurvey;
+package sdu.androidlab.isurvey.UI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -63,7 +63,7 @@ public class AdminitorFrame extends JInternalFrame {
 		setIconifiable(true);
 		setMaximizable(true);
 
-		setBounds(100, 100, 606, 270);
+		setBounds(100, 100, 688, 247);
 		
 		JPanel contentPanel = new JPanel();
 		setContentPane(contentPanel);
@@ -76,7 +76,7 @@ public class AdminitorFrame extends JInternalFrame {
 		tabbedPane.addTab("我的信息", null, panel, null);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 77, 76, 115, 104, 129, 0 };
-		gbl_panel.rowHeights = new int[] { 31, 29, 25, 25, 30, 29,
+		gbl_panel.rowHeights = new int[] { 15, 29, 25, 25, 30, 29,
 		        0 };
 		gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
 		        Double.MIN_VALUE };
