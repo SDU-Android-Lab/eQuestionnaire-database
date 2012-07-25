@@ -1,6 +1,6 @@
 /*
  * Util sdu.androidlab.isurvey.Data Administor.java
- * 2012 2012-7-24 下午6:24:11
+ * 2012 2012-7-24 涓嬪崍6:24:11
  * @author zhenzxie
  */
 package sdu.androidlab.isurvey.Data;
@@ -23,9 +23,9 @@ public class Administor extends BaseData {
 	@Column(name = "apassword")
 	public String apassword;
 	@Column(name = "adepartment")
-	public String adepartment;// 管理员部门
+	public String adepartment;// 绠＄悊鍛橀儴闂�
 	@Column(name = "apost")
-	public String apost;// 管理员职位
+	public String apost;// 绠＄悊鍛樿亴浣�
 	@Column(name = "salary")
 	public Double salary;
 	@Column(name = "atell")
