@@ -10,7 +10,7 @@ package sdu.androidlab.isurvey;
  * @author zhenzxie
  *
  */
-public class Constant {
+public final class Constant {
 	
 	// public static class database {
 	//
@@ -20,4 +20,17 @@ public class Constant {
 	//
 	// }
 	
+	public static final class DatabaseInfo {
+		
+		public static final int PRO_XZ = 10;
+		public static final int PRO_JD = 20;
+		public static final String PRO_XZSTR = "选择";
+		public static final String PRO_JDSTR = "简答";
+		public static final int QUES_TEMPLATE1 = 0;
+		public static final int QUES_TEMPLATE2 = 1;
+		public static final int QUES_TEMPLATE3 = 2;
+		public static final String QUES_TEMPLATESTR1 = "GALLERY";
+		public static final String QUES_TEMPLATESTR2 = "GRID";
+		public static final String QUES_TEMPLATESTR3 = "LIST";
+	}
 }

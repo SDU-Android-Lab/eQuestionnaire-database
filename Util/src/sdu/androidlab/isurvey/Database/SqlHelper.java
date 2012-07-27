@@ -23,7 +23,7 @@ import sdu.androidlab.isurvey.Database.annotation.Column;
 import sdu.androidlab.isurvey.Database.annotation.Table;
 
 /**
- * @author zhenzxie TODO:int 使用默认值，包装成Integer 时会是null吗？
+ * @author zhenzxie 
  */
 public class SqlHelper {
 	

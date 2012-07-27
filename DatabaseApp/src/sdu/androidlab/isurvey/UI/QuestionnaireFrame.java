@@ -1,54 +1,58 @@
 package sdu.androidlab.isurvey.UI;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.List;
+import java.util.Observable;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import sdu.androidlab.isurvey.Constant.DatabaseInfo;
+import sdu.androidlab.isurvey.Data.Data;
+import sdu.androidlab.isurvey.Data.Problem;
+import sdu.androidlab.isurvey.Data.Questionnaire;
+import sdu.androidlab.isurvey.DataModel.QuestionnarieManager;
 
-public class QuestionnaireFrame extends JInternalFrame {
+
+public class QuestionnaireFrame extends BaseFrame {
 	
 	/**
      * 
      */
 	private static final long serialVersionUID = 6657390263404145175L;
 	private JTable table;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-	
-		EventQueue.invokeLater(new Runnable() {
-			
-			public void run() {
-			
-				try {
-					QuestionnaireFrame frame = new QuestionnaireFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private QuestionnarieManager manager;
+	private JComboBox<String> comboBox;
+	private JLabel id;
+	private JLabel simpleSize;
+	private JLabel createData;
+	private JLabel finishData;
+	private JLabel template;
+	private JLabel cost;
+	private JLabel note;
+	private JButton button;
+	private Long cid;
 	
 	/**
 	 * Create the frame.
 	 */
-	public QuestionnaireFrame() {
+	public QuestionnaireFrame(Long cid) {
 	
+		this.cid = cid;
+
 		setTitle("\u95EE\u5377");
 	
 		setResizable(true);
@@ -80,7 +84,22 @@ public class QuestionnaireFrame extends JInternalFrame {
 		gbc_lblId.gridy = 0;
 		panel.add(lblId, gbc_lblId);
 		
-		JComboBox<String> comboBox = new JComboBox<String>();
+		comboBox = new JComboBox<String>();
+		comboBox.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+			
+				int index = comboBox.getSelectedIndex();
+				if (index >= 0) {
+					Questionnaire ques = (Questionnaire) manager.getList().get(
+					        index);
+					setQuesInfo(ques);
+					if (table.isShowing()) {
+						manager.showProblem(ques.qid);
+					}
+				}
+			}
+		});
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -96,13 +115,13 @@ public class QuestionnaireFrame extends JInternalFrame {
 		gbc_lblId_1.gridy = 0;
 		panel.add(lblId_1, gbc_lblId_1);
 		
-		JLabel label_3 = new JLabel("");
-		label_3.setFont(new Font("华文行楷", Font.PLAIN, 18));
-		GridBagConstraints gbc_label_3 = new GridBagConstraints();
-		gbc_label_3.insets = new Insets(0, 0, 5, 5);
-		gbc_label_3.gridx = 3;
-		gbc_label_3.gridy = 0;
-		panel.add(label_3, gbc_label_3);
+		id = new JLabel("");
+		id.setFont(new Font("华文行楷", Font.PLAIN, 18));
+		GridBagConstraints gbc_id = new GridBagConstraints();
+		gbc_id.insets = new Insets(0, 0, 5, 5);
+		gbc_id.gridx = 3;
+		gbc_id.gridy = 0;
+		panel.add(id, gbc_id);
 		
 		JLabel label = new JLabel("\u6837\u672C\u91CF\uFF1A");
 		label.setFont(new Font("华文行楷", Font.PLAIN, 18));
@@ -112,13 +131,13 @@ public class QuestionnaireFrame extends JInternalFrame {
 		gbc_label.gridy = 0;
 		panel.add(label, gbc_label);
 		
-		JLabel label_4 = new JLabel("");
-		label_4.setFont(new Font("华文行楷", Font.PLAIN, 18));
-		GridBagConstraints gbc_label_4 = new GridBagConstraints();
-		gbc_label_4.insets = new Insets(0, 0, 5, 0);
-		gbc_label_4.gridx = 5;
-		gbc_label_4.gridy = 0;
-		panel.add(label_4, gbc_label_4);
+		simpleSize = new JLabel("");
+		simpleSize.setFont(new Font("华文行楷", Font.PLAIN, 18));
+		GridBagConstraints gbc_simpleSize = new GridBagConstraints();
+		gbc_simpleSize.insets = new Insets(0, 0, 5, 0);
+		gbc_simpleSize.gridx = 5;
+		gbc_simpleSize.gridy = 0;
+		panel.add(simpleSize, gbc_simpleSize);
 		
 		JLabel label_5 = new JLabel("\u521B\u5EFA\u65E5\u671F\uFF1A");
 		label_5.setFont(new Font("华文行楷", Font.PLAIN, 18));
@@ -128,13 +147,13 @@ public class QuestionnaireFrame extends JInternalFrame {
 		gbc_label_5.gridy = 1;
 		panel.add(label_5, gbc_label_5);
 		
-		JLabel label_6 = new JLabel("");
-		label_6.setFont(new Font("华文行楷", Font.PLAIN, 18));
-		GridBagConstraints gbc_label_6 = new GridBagConstraints();
-		gbc_label_6.insets = new Insets(0, 0, 5, 5);
-		gbc_label_6.gridx = 1;
-		gbc_label_6.gridy = 1;
-		panel.add(label_6, gbc_label_6);
+		createData = new JLabel("");
+		createData.setFont(new Font("华文行楷", Font.PLAIN, 18));
+		GridBagConstraints gbc_createData = new GridBagConstraints();
+		gbc_createData.insets = new Insets(0, 0, 5, 5);
+		gbc_createData.gridx = 1;
+		gbc_createData.gridy = 1;
+		panel.add(createData, gbc_createData);
 		
 		JLabel label_7 = new JLabel("\u5B8C\u6210\u65E5\u671F\uFF1A");
 		label_7.setFont(new Font("华文行楷", Font.PLAIN, 18));
@@ -144,13 +163,13 @@ public class QuestionnaireFrame extends JInternalFrame {
 		gbc_label_7.gridy = 1;
 		panel.add(label_7, gbc_label_7);
 		
-		JLabel label_8 = new JLabel("");
-		label_8.setFont(new Font("华文行楷", Font.PLAIN, 18));
-		GridBagConstraints gbc_label_8 = new GridBagConstraints();
-		gbc_label_8.insets = new Insets(0, 0, 5, 5);
-		gbc_label_8.gridx = 3;
-		gbc_label_8.gridy = 1;
-		panel.add(label_8, gbc_label_8);
+		finishData = new JLabel("");
+		finishData.setFont(new Font("华文行楷", Font.PLAIN, 18));
+		GridBagConstraints gbc_finishData = new GridBagConstraints();
+		gbc_finishData.insets = new Insets(0, 0, 5, 5);
+		gbc_finishData.gridx = 3;
+		gbc_finishData.gridy = 1;
+		panel.add(finishData, gbc_finishData);
 		
 		JLabel label_9 = new JLabel("\u6A21\u7248\u540D\u79F0\uFF1A");
 		label_9.setFont(new Font("华文行楷", Font.PLAIN, 18));
@@ -160,13 +179,13 @@ public class QuestionnaireFrame extends JInternalFrame {
 		gbc_label_9.gridy = 1;
 		panel.add(label_9, gbc_label_9);
 		
-		JLabel label_10 = new JLabel("");
-		label_10.setFont(new Font("华文行楷", Font.PLAIN, 18));
-		GridBagConstraints gbc_label_10 = new GridBagConstraints();
-		gbc_label_10.insets = new Insets(0, 0, 5, 0);
-		gbc_label_10.gridx = 5;
-		gbc_label_10.gridy = 1;
-		panel.add(label_10, gbc_label_10);
+		template = new JLabel("");
+		template.setFont(new Font("华文行楷", Font.PLAIN, 18));
+		GridBagConstraints gbc_template = new GridBagConstraints();
+		gbc_template.insets = new Insets(0, 0, 5, 0);
+		gbc_template.gridx = 5;
+		gbc_template.gridy = 1;
+		panel.add(template, gbc_template);
 		
 		JLabel label_11 = new JLabel("\u4EF7\u683C\uFF1A");
 		label_11.setFont(new Font("华文行楷", Font.PLAIN, 18));
@@ -176,13 +195,13 @@ public class QuestionnaireFrame extends JInternalFrame {
 		gbc_label_11.gridy = 2;
 		panel.add(label_11, gbc_label_11);
 		
-		JLabel label_12 = new JLabel("");
-		label_12.setFont(new Font("华文行楷", Font.PLAIN, 18));
-		GridBagConstraints gbc_label_12 = new GridBagConstraints();
-		gbc_label_12.insets = new Insets(0, 0, 0, 5);
-		gbc_label_12.gridx = 1;
-		gbc_label_12.gridy = 2;
-		panel.add(label_12, gbc_label_12);
+		cost = new JLabel("");
+		cost.setFont(new Font("华文行楷", Font.PLAIN, 18));
+		GridBagConstraints gbc_cost = new GridBagConstraints();
+		gbc_cost.insets = new Insets(0, 0, 0, 5);
+		gbc_cost.gridx = 1;
+		gbc_cost.gridy = 2;
+		panel.add(cost, gbc_cost);
 		
 		JLabel label_13 = new JLabel("\u5907\u6CE8\uFF1A");
 		label_13.setFont(new Font("华文行楷", Font.PLAIN, 18));
@@ -192,16 +211,29 @@ public class QuestionnaireFrame extends JInternalFrame {
 		gbc_label_13.gridy = 2;
 		panel.add(label_13, gbc_label_13);
 		
-		JLabel label_14 = new JLabel("");
-		label_14.setFont(new Font("华文行楷", Font.PLAIN, 18));
-		GridBagConstraints gbc_label_14 = new GridBagConstraints();
-		gbc_label_14.insets = new Insets(0, 0, 0, 5);
-		gbc_label_14.gridwidth = 2;
-		gbc_label_14.gridx = 3;
-		gbc_label_14.gridy = 2;
-		panel.add(label_14, gbc_label_14);
+		note = new JLabel("");
+		note.setFont(new Font("华文行楷", Font.PLAIN, 18));
+		GridBagConstraints gbc_note = new GridBagConstraints();
+		gbc_note.insets = new Insets(0, 0, 0, 5);
+		gbc_note.gridwidth = 2;
+		gbc_note.gridx = 3;
+		gbc_note.gridy = 2;
+		panel.add(note, gbc_note);
 		
-		JButton button = new JButton("\u67E5\u770B\u95EE\u9898");
+		button = new JButton("\u67E5\u770B\u95EE\u9898");
+		button.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+			
+				if (table.isShowing()) {
+					button.setText("查看问题");
+					table.setVisible(false);
+				} else {
+					button.setText("隐藏问题");
+					table.setVisible(true);
+				}
+			}
+		});
 		button.setFont(new Font("华文行楷", Font.PLAIN, 16));
 		GridBagConstraints gbc_button = new GridBagConstraints();
 		gbc_button.gridx = 5;
@@ -209,20 +241,94 @@ public class QuestionnaireFrame extends JInternalFrame {
 		panel.add(button, gbc_button);
 		
 		table = new JTable();
-		table.setModel(new DefaultTableModel(new Object[][] {
-		        { null, null, null, null, null },
-		        { null, null, null, null, null },
-		        { null, null, null, null, null },
-		        { null, null, null, null, null },
-		        { null, null, null, null, null },
-		        { null, null, null, null, null },
-		        { null, null, null, null, null }, }, new String[] { "Id",
-		        "\u7C7B\u578B", "\u5185\u5BB9", "\u56FE\u7247\u8DEF\u5F84",
-		        "\u97F3\u9891\u8DEF\u5F84" }));
-		
 		JScrollPane scrollPane = new JScrollPane(table);
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
+		
+		manager = new QuestionnarieManager(this, cid);
+		manager.initManager();
+	}
+
+	/**
+	 * @see sdu.androidlab.isurvey.UI.BaseFrame#update(java.util.Observable,
+	 *      java.lang.Object)
+	 */
+	@Override
+	public void update(Observable o, Object arg) {
+		
+		List<Data> list = manager.getList();
+		if (list != null) {
+			Questionnaire ques = null;
+			for (Data data : list) {
+				ques = (Questionnaire) data;
+				if (ques.client == cid) {
+					setQuesInfo(ques);
+				}
+				comboBox.addItem(ques.name);
+			}
+		}
+		
+		List<Data> pList = manager.getpManager().getList();
+		if (pList != null) {
+			Object[][] objects = new Object[5][pList.size()];
+			Problem pro = null;
+			int i = 0;
+			for (Data data : pList) {
+				pro = (Problem) data;
+				objects[0][i] = pro.pid;
+				switch (pro.type) {
+					case DatabaseInfo.PRO_JD:
+						objects[1][i] = DatabaseInfo.PRO_JDSTR;
+						break;
+					case DatabaseInfo.PRO_XZ:
+						objects[1][i] = DatabaseInfo.PRO_XZSTR;
+				}
+				objects[2][i] = pro.content;
+				objects[3][i] = pro.image;
+				objects[4][i++] = pro.audio;
+			}
+			
+			table.setModel(new DefaultTableModel(objects, new String[] { "Id",
+			        "\u7C7B\u578B", "\u5185\u5BB9", "\u56FE\u7247\u8DEF\u5F84",
+			        "\u97F3\u9891\u8DEF\u5F84" }));
+		}
 
 	}
+	
+	private void setQuesInfo(Questionnaire ques) {
+	
+		id.setText(ques.qid.toString());
+		createData.setText(ques.createDate.toString());
+		finishData.setText(ques.finishDate.toString());
+		switch(ques.template){
+			case DatabaseInfo.QUES_TEMPLATE1:
+				template.setText(DatabaseInfo.QUES_TEMPLATESTR1);
+				break;
+			case DatabaseInfo.QUES_TEMPLATE2:
+				template.setText(DatabaseInfo.QUES_TEMPLATESTR2);
+				break;
+			case DatabaseInfo.QUES_TEMPLATE3:
+				template.setText(DatabaseInfo.QUES_TEMPLATESTR3);
+		}
+		simpleSize.setText(ques.sampleSize + " 份");
+		cost.setText(ques.cost.toString() + " 元");
+		note.setText(ques.note);
+	}
+	
+
+	/**
+	 * @return the manager
+	 */
+    public QuestionnarieManager getManager() {
+    
+	    return manager;
+    }
+
+	/**
+     * @param manager the manager to set
+     */
+    public void setManager(QuestionnarieManager manager) {
+    
+	    this.manager = manager;
+    }
 	
 }

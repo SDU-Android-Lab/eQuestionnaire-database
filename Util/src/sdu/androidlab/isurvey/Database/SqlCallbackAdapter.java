@@ -72,6 +72,7 @@ public class SqlCallbackAdapter implements SqlCallback {
 	@Override
 	public void onError(SqlError error) {
 	
+		error.exception.printStackTrace();
 	}
 	
 }
