@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import sdu.androidlab.isurvey.UI.BaseFrame;
@@ -41,13 +40,22 @@ public class AccountManager extends BaseDataModel {
 			}
 		}
 		ArrayList<Account> object = null;
+		ObjectInputStream input = null;
 		try {
 			FileInputStream fiStream = new FileInputStream(file);
-			ObjectInputStream input = new ObjectInputStream(fiStream);
+			input = new ObjectInputStream(fiStream);
 			object = (ArrayList<Account>)input.readObject();
 			input.close();
 		} catch (Exception e) {
+			object = new ArrayList<Account>();
 			e.printStackTrace();
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 		list = object;
 		super.notifyDataChange();
@@ -81,13 +89,24 @@ public class AccountManager extends BaseDataModel {
 	public void saveAllAccount() {
 	
 		File file = new File("account.is");
+		if (file.exists()) {
+			file.delete();
+		}
+		ObjectOutputStream output = null;
 		try {
 			FileOutputStream fiStream = new FileOutputStream(file);
-			ObjectOutputStream output = new ObjectOutputStream(fiStream);
+			output = new ObjectOutputStream(fiStream);
 			output.writeObject(list);
 			output.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			if (output != null) {
+				try {
+					output.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -100,73 +119,6 @@ public class AccountManager extends BaseDataModel {
 			Account account = list.get(position);
 			return account.getPassword();
 		}
-	}
-
-	public class Account implements Serializable {
-		
-		/**
-         * 
-         */
-		private static final long serialVersionUID = -401403377357376864L;
-		Integer account;
-		String password;
-		
-		public Account() {
-		
-			super();
-		}
-		
-		public Account(Integer account, String password) {
-		
-			super();
-			this.account = account;
-			this.password = password;
-		}
-		
-		/**
-		 * @return the account
-		 */
-		public synchronized final Integer getAccount() {
-		
-			return account;
-		}
-		
-		/**
-		 * @param account
-		 *            the account to set
-		 */
-		public synchronized final void setAccount(Integer account) {
-		
-			this.account = account;
-		}
-		
-		/**
-		 * @return the password
-		 */
-		public synchronized final String getPassword() {
-		
-			return password;
-		}
-		
-		/**
-		 * @param password
-		 *            the password to set
-		 */
-		public synchronized final void setPassword(String password) {
-		
-			this.password = password;
-		}
-		
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-		
-			return "Account [account=" + account + ", password=" + password
-			        + "]";
-		}
-
 	}
 
 }

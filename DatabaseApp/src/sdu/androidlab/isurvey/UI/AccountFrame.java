@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JButton;
@@ -21,8 +21,8 @@ import javax.swing.JPasswordField;
 
 import sdu.androidlab.isurvey.Data.Administor;
 import sdu.androidlab.isurvey.Data.Data;
+import sdu.androidlab.isurvey.DataModel.Account;
 import sdu.androidlab.isurvey.DataModel.AccountManager;
-import sdu.androidlab.isurvey.DataModel.AccountManager.Account;
 import sdu.androidlab.isurvey.DataModel.AdminitorManager;
 import sdu.androidlab.isurvey.DataModel.ClientManager;
 import sdu.androidlab.isurvey.DataModel.PersonnelManager;
@@ -98,7 +98,9 @@ public class AccountFrame extends BaseFrame {
 			public void itemStateChanged(ItemEvent e) {
 			
 				int position = comboBox.getSelectedIndex();
-				passwordField.setText(manager.getPassword(position));
+				if (position >= 0) {
+					passwordField.setText(manager.getPassword(position));
+				}
 			}
 		});
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
@@ -200,7 +202,7 @@ public class AccountFrame extends BaseFrame {
 	@Override
 	public void update(Observable o, Object arg) {
 	
-		ArrayList<Account> list = manager.getAllAccounts();
+		List<Account> list = manager.getAllAccounts();
 		if (list != null) {
 			for (Account account : list) {
 				comboBox.addItem(account.getAccount());
