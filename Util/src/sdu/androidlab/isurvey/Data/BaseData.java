@@ -74,7 +74,7 @@ public class BaseData implements Data {
 	}
 
 	@Override
-	public boolean fillData(ResultSet resultSet) {
+	public boolean fillData(final ResultSet resultSet) {
 	
 		return false;
 	}

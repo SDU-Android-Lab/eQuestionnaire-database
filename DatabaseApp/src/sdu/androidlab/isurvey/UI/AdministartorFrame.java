@@ -21,12 +21,12 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import sdu.androidlab.isurvey.Data.Administor;
+import sdu.androidlab.isurvey.Data.Administrator;
 import sdu.androidlab.isurvey.Data.Data;
-import sdu.androidlab.isurvey.DataModel.AdminitorManager;
+import sdu.androidlab.isurvey.DataModel.AdministartorManager;
 import sdu.androidlab.isurvey.Database.SqlHelper;
 
-public class AdminitorFrame extends BaseFrame {
+public class AdministartorFrame extends BaseFrame {
 	
 	/**
      * 
@@ -41,7 +41,7 @@ public class AdminitorFrame extends BaseFrame {
 	private JTextField id;
 	private JTable table;
 	private JButton confirm;
-	private AdminitorManager manager;
+	private AdministartorManager manager;
 	
 	/**
 	 * Launch the application.
@@ -53,7 +53,7 @@ public class AdminitorFrame extends BaseFrame {
 			public void run() {
 			
 				try {
-					AdminitorFrame frame = new AdminitorFrame();
+					AdministartorFrame frame = new AdministartorFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,7 +65,7 @@ public class AdminitorFrame extends BaseFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AdminitorFrame() {
+	public AdministartorFrame() {
 	
 		setTitle("\u7BA1\u7406\u5458\u4FE1\u606F");
 		setClosable(true);
@@ -229,17 +229,17 @@ public class AdminitorFrame extends BaseFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 			
-				int option = JOptionPane.showConfirmDialog(AdminitorFrame.this,
-				        "您真的要修改吗");
+				int option = JOptionPane.showConfirmDialog(AdministartorFrame.this,
+ "您真的要修改吗");
 				if (option == JOptionPane.OK_OPTION) {
-					Administor administor = new Administor();
+					Administrator administor = new Administrator();
 					administor.aname = name.getText();
 					administor.apassword = password.getText();
 					administor.atell = tell.getText();
 					SqlHelper helper = new SqlHelper();
 					helper.updata(manager.getSelf(), administor);
 				} else {
-					Administor self = manager.getSelf();
+					Administrator self = manager.getSelf();
 					name.setText(self.aname);
 					tell.setText(self.atell);
 					password.setText(self.apassword);
@@ -270,30 +270,30 @@ public class AdminitorFrame extends BaseFrame {
 	@Override
 	public void update(Observable o, Object arg) {
 	
-		Administor self = manager.getSelf();
+		Administrator self = manager.getSelf();
 		List<Data> other = manager.getOther();
 
 		if (self != null) {
-			id.setText(self.aid.toString());
+			id.setText(String.valueOf(self.aid));
 			name.setText(self.aname);
 			department.setText(self.adepartment);
 			password.setText(self.apassword);
 			post.setText(self.apost);
 			tell.setText(self.atell);
-			
+			salary.setText(String.valueOf(self.salary) + " 元");
 		}
 		
 		if (other != null) {
-			Object[][] objects = new Object[5][other.size() - 1];
+			Object[][] objects = new Object[other.size() - 1][5];
 			int i = 0;
 			for (Data data : other) {
-				Administor ad = (Administor) data;
-				if (ad.aid.intValue() != manager.getId().intValue()) {
-					objects[0][i] = ad.aid;
-					objects[1][i] = ad.aname;
-					objects[2][i] = ad.adepartment;
-					objects[3][i] = ad.apost;
-					objects[4][i++] = ad.atell;
+				Administrator ad = (Administrator) data;
+				if (ad.aid != manager.getId().intValue()) {
+					objects[i][0] = ad.aid;
+					objects[i][1] = ad.aname;
+					objects[i][2] = ad.adepartment;
+					objects[i][3] = ad.apost;
+					objects[i++][4] = ad.atell;
 				}
 			}
 			table.setModel(new DefaultTableModel(objects, new String[] { "Id",
@@ -305,7 +305,7 @@ public class AdminitorFrame extends BaseFrame {
 	/**
 	 * @return the manager
 	 */
-	public AdminitorManager getManager() {
+	public AdministartorManager getManager() {
 	
 		return manager;
 	}
@@ -314,7 +314,7 @@ public class AdminitorFrame extends BaseFrame {
 	 * @param manager
 	 *            the manager to set
 	 */
-	public void setManager(AdminitorManager manager) {
+	public void setManager(AdministartorManager manager) {
 	
 		this.manager = manager;
 	}

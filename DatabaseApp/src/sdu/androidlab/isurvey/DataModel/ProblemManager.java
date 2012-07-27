@@ -5,6 +5,7 @@
  */
 package sdu.androidlab.isurvey.DataModel;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -32,8 +33,16 @@ public class ProblemManager extends Observable {
 		Problem problem = new Problem();
 		problem.questionnaire_qid = qid;
 		
+		Class<Problem> cl = Problem.class;
+		Field[] fields = new Field[1];
+		try {
+			fields[0] = cl.getDeclaredField("questionnaire_qid");
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+
 		SqlHelper helper = new SqlHelper();
-		helper.query(problem, new SqlCallbackAdapter() {
+		helper.query(problem, fields, new SqlCallbackAdapter() {
 			
 			/**
 			 * @see sdu.androidlab.isurvey.Database.SqlCallbackAdapter#onQueryComplete(java.util.List)

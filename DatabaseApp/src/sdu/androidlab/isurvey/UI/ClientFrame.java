@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -74,6 +76,23 @@ public class ClientFrame extends BaseFrame {
 		addPopup(table, popupMenu);
 		
 		JMenuItem menuItem = new JMenuItem("\u67E5\u770B\u95EE\u5377");
+		menuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				int index = table.getSelectedRow();
+				if(index>=0&&index<manager.getClient().size()){
+					Client client = (Client) manager.getClient().get(index);
+					if (client != null) {
+						QuestionnaireFrame frame = UIFactory
+								.getQuestionnaireFrame();
+						frame.setCid(client.cid);
+						frame.setVisible(true);
+					}
+				}
+			}
+		});
 		popupMenu.add(menuItem);
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
 	}
@@ -101,7 +120,6 @@ public class ClientFrame extends BaseFrame {
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}
 		});
-		// TODO:add a listener to popup menu to listener click event
 	}
 
 	/**
@@ -113,20 +131,20 @@ public class ClientFrame extends BaseFrame {
 	
 		List<Data> list = manager.getClient();
 		if(list!=null){
-			Object[][] objects = new Object[9][list.size()];
+			Object[][] objects = new Object[list.size()][9];
 			int i = 0;
 			Client client = null;
 			for (Data data : list) {
 				client = (Client) data;
-				objects[0][i] = client.cid;
-				objects[1][i] = client.companyName;
-				objects[2][i] = client.password;
-				objects[3][i] = client.field;
-				objects[4][i] = client.email;
-				objects[5][i] = client.province;
-				objects[6][i] = client.city;
-				objects[7][i] = client.street;
-				objects[8][i] = client.phone;
+				objects[i][0] = client.cid;
+				objects[i][1] = client.companyName;
+				objects[i][2] = client.password;
+				objects[i][3] = client.field;
+				objects[i][4] = client.email;
+				objects[i][5] = client.province;
+				objects[i][6] = client.city;
+				objects[i][7] = client.street;
+				objects[i++][8] = client.phone;
 			}
 			table.setModel(new DefaultTableModel(objects,
 			        new String[] { "Id", "\u516C\u53F8\u540D", "\u5BC6\u7801",

@@ -106,24 +106,24 @@ public class PersonnelFrame extends BaseFrame {
 	
 		List<Data> list = manager.getPersonnel();
 		if (list != null) {
-			Object[][] objects = new Object[9][list.size()];
+			Object[][] objects = new Object[list.size()][9];
 			int i = 0;
 			Personnel personnel = null;
 			for (Data data : list) {
 				personnel = (Personnel) data;
-				objects[0][i] = personnel.id;
-				objects[1][i] = personnel.name;
-				objects[2][i] = personnel.email;
-				objects[3][i] = personnel.province;
-				objects[4][i] = personnel.city;
-				objects[5][i] = personnel.street;
-				objects[6][i] = personnel.tell;
-				objects[7][i] = personnel.salay;
-				objects[8][i++] = personnel.administor_aid;
+				objects[i][0] = personnel.id;
+				objects[i][1] = personnel.name;
+				objects[i][2] = personnel.email;
+				objects[i][3] = personnel.province;
+				objects[i][4] = personnel.city;
+				objects[i][5] = personnel.street;
+				objects[i][6] = personnel.tell;
+				objects[i][7] = personnel.salary;
+				objects[i++][8] = personnel.administor_aid;
 			}
 			table.setModel(new DefaultTableModel(objects, new String[] { "id",
 			        "\u540D\u5B57", "\u90AE\u7BB1", "\u7701\u4EFD",
-			        "\u57CE\u5E02", "街道", "电话", "工资", "所属管理员Id", }));
+					"\u57CE\u5E02", "街道", "电话", "工资", "所属管理员Id", }));
 		}
 	}
 

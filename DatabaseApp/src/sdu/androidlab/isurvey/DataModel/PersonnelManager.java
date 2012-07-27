@@ -33,7 +33,7 @@ public class PersonnelManager extends BaseDataModel {
 	public void initManager() {
 	
 		SqlHelper helper = new SqlHelper();
-		helper.query(new Personnel(), new SqlCallbackAdapter() {
+		helper.query(Personnel.class, new SqlCallbackAdapter() {
 			
 			/**
 			 * @see sdu.androidlab.isurvey.Database.SqlCallbackAdapter#onQueryComplete(java.util.List)

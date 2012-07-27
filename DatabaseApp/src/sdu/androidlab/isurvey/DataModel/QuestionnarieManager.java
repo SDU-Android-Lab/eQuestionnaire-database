@@ -5,6 +5,7 @@
  */
 package sdu.androidlab.isurvey.DataModel;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -25,20 +26,28 @@ public class QuestionnarieManager extends BaseDataModel implements Observer {
 	private List<Data> list;
 	private ProblemManager pManager;
 
-	public QuestionnarieManager(BaseFrame baseFrame, Long cid) {
+	public QuestionnarieManager(BaseFrame baseFrame) {
 	
 		super(baseFrame);
-		this.cid = cid;
 		pManager = new ProblemManager(this);
 	}
 	
-	public void initManager() {
+	public void initManager(Long cid) {
 	
+		this.cid = cid;
 		Questionnaire questionnaire = new Questionnaire();
 		questionnaire.client = cid;
 		
+		Class<Questionnaire> cl = Questionnaire.class;
+		Field[] fields = new Field[1];
+		try {
+			fields[0] = cl.getDeclaredField("client");
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+		
 		SqlHelper helper = new SqlHelper();
-		helper.query(questionnaire, new SqlCallbackAdapter() {
+		helper.query(questionnaire, fields, new SqlCallbackAdapter() {
 
 			/**
 			 * @see sdu.androidlab.isurvey.Database.SqlCallbackAdapter#onQueryComplete(java.util.List)

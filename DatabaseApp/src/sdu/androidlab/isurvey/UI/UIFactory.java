@@ -13,11 +13,13 @@ public final class UIFactory {
 	
 	private static AccountFrame accountFrame;
 	
-	private static AdminitorFrame adminitorFrame;
+	private static AdministartorFrame adminitorFrame;
 	
 	private static ClientFrame clientFrame;
 	
 	private static PersonnelFrame personnelFrame;
+	
+	private static QuestionnaireFrame questionnaireFrame;
 
 	private UIFactory() {
 	
@@ -36,10 +38,10 @@ public final class UIFactory {
 	/**
 	 * @return the adminitorFrame
 	 */
-	public static synchronized final AdminitorFrame getAdminitorFrame() {
+	public static synchronized final AdministartorFrame getAdminitorFrame() {
 	
 		if (adminitorFrame == null)
-			adminitorFrame = new AdminitorFrame();
+			adminitorFrame = new AdministartorFrame();
 		return adminitorFrame;
 	}
 	
@@ -62,5 +64,12 @@ public final class UIFactory {
 			personnelFrame = new PersonnelFrame();
 		return personnelFrame;
 	}
+
+	public static QuestionnaireFrame getQuestionnaireFrame() {
 	
+		if (questionnaireFrame == null)
+			questionnaireFrame = new QuestionnaireFrame();
+		return questionnaireFrame;
+	}
+
 }

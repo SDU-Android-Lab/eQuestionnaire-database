@@ -5,6 +5,9 @@
  */
 package sdu.androidlab.isurvey.Data;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import sdu.androidlab.isurvey.Database.annotation.Column;
 import sdu.androidlab.isurvey.Database.annotation.Table;
 
@@ -17,7 +20,7 @@ import sdu.androidlab.isurvey.Database.annotation.Table;
 public class Personnel extends BaseData {
 	
 	@Column(name = "id")
-	public Integer id;
+	public int id;
 	@Column(name = "name")
 	public String name;
 	@Column(name = "password")
@@ -32,8 +35,8 @@ public class Personnel extends BaseData {
 	public String street;
 	@Column(name = "tell")
 	public String tell;
-	@Column(name = "salay")
-	public Double salay;
+	@Column(name = "salary")
+	public Double salary;
 	@Column(name = "administor_aid")
 	public Integer administor_aid;
 	
@@ -78,10 +81,36 @@ public class Personnel extends BaseData {
 		this.city = city;
 		this.street = street;
 		this.tell = tell;
-		this.salay = salay;
+		this.salary = salay;
 		this.administor_aid = administor_aid;
 	}
 
+	/**
+	 * @see sdu.androidlab.isurvey.Data.BaseData#fillData(java.sql.ResultSet)
+	 */
+	@Override
+	public boolean fillData(final ResultSet resultSet) {
+	
+		boolean done = true;
+		try {
+			this.id = resultSet.getInt("id");
+			this.name = resultSet.getString("name");
+			this.password = resultSet.getString("password");
+			this.email = resultSet.getString("email");
+			this.province = resultSet.getString("province");
+			this.city = resultSet.getString("city");
+			this.street = resultSet.getString("street");
+			this.salary = resultSet.getDouble("salary");
+			this.tell = resultSet.getString("tell");
+			this.administor_aid = resultSet.getInt("administor_aid");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			done = false;
+		}
+		System.out.println(this.toString());
+		return done;
+	}
+	
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -91,7 +120,7 @@ public class Personnel extends BaseData {
 		return "Personnel [id=" + id + ", name=" + name + ", password="
 				+ password + ", email=" + email + ", province=" + province
 				+ ", city=" + city + ", street=" + street + ", tell=" + tell
-				+ ", salay=" + salay + ", administor_aid=" + administor_aid
+				+ ", salay=" + salary + ", administor_aid=" + administor_aid
 				+ "]";
 	}
 

@@ -22,8 +22,8 @@ public final class Constant {
 	
 	public static final class DatabaseInfo {
 		
-		public static final int PRO_XZ = 10;
-		public static final int PRO_JD = 20;
+		public static final int PRO_XZ = 0;
+		public static final int PRO_JD = 1;
 		public static final String PRO_XZSTR = "选择";
 		public static final String PRO_JDSTR = "简答";
 		public static final int QUES_TEMPLATE1 = 0;

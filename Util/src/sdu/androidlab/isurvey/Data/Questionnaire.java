@@ -1,5 +1,7 @@
 package sdu.androidlab.isurvey.Data;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 import sdu.androidlab.isurvey.Database.annotation.Column;
@@ -14,9 +16,9 @@ import sdu.androidlab.isurvey.Database.annotation.Table;
 public class Questionnaire extends BaseData {
 	
 	@Column(name = "qid")
-	public Long qid;
+	public long qid;
 	@Column(name = "client_cid")
-	public Long client;
+	public long client;
 	@Column(name = "name")
 	public String name;
 	@Column(name = "createData")
@@ -48,6 +50,31 @@ public class Questionnaire extends BaseData {
 		this.note = note;
 	}
 
+	/**
+	 * @see sdu.androidlab.isurvey.Data.BaseData#fillData(java.sql.ResultSet)
+	 */
+	@Override
+	public boolean fillData(ResultSet resultSet) {
+	
+		boolean done = true;
+		try {
+			this.qid = resultSet.getLong("qid");
+			this.client = resultSet.getLong("client_cid");
+			this.name = resultSet.getString("name");
+			this.createDate = resultSet.getDate("createData");
+			this.finishDate = resultSet.getDate("finishData");
+			this.template = resultSet.getInt("template");
+			this.sampleSize = resultSet.getInt("sampleSize");
+			this.cost = resultSet.getDouble("cost");
+			this.note = resultSet.getString("note");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			done = false;
+		}
+		return done;
+	}
+	
 	/**
 	 * @see java.lang.Object#toString()
 	 */

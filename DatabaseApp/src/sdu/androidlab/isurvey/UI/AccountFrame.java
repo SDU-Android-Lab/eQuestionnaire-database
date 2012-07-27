@@ -19,11 +19,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
-import sdu.androidlab.isurvey.Data.Administor;
+import sdu.androidlab.isurvey.Data.Administrator;
 import sdu.androidlab.isurvey.Data.Data;
 import sdu.androidlab.isurvey.DataModel.Account;
 import sdu.androidlab.isurvey.DataModel.AccountManager;
-import sdu.androidlab.isurvey.DataModel.AdminitorManager;
+import sdu.androidlab.isurvey.DataModel.AdministartorManager;
 import sdu.androidlab.isurvey.DataModel.ClientManager;
 import sdu.androidlab.isurvey.DataModel.PersonnelManager;
 import sdu.androidlab.isurvey.Database.SqlHelper;
@@ -78,9 +78,9 @@ public class AccountFrame extends BaseFrame {
 		gbl_contentPanel.columnWidths = new int[] { 114, 128, 0, 0 };
 		gbl_contentPanel.rowHeights = new int[] { 0, 36, 30, 0, 0, 0 };
 		gbl_contentPanel.columnWeights = new double[] { 0.0, 0.0, 0.0,
-		        Double.MIN_VALUE };
+				Double.MIN_VALUE };
 		gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-		        Double.MIN_VALUE };
+				Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		
 		JLabel lblid = new JLabel("\u60A8\u7684 Id\uFF1A");
@@ -130,40 +130,53 @@ public class AccountFrame extends BaseFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+			
+				int index = comboBox.getSelectedIndex();
+				Integer id = null;
+				if (index >= 0) {
+					id = comboBox.getItemAt(index);
+				} else {
+					try {
+						id = Integer.parseInt((String) comboBox.getEditor()
+								.getItem());
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showConfirmDialog(AccountFrame.this,
+								"your input is invalid");
+					}
+				}
+				String password = new String(passwordField.getPassword());
+				System.out.println(id + "   " + password+"   "+index);
 				
-				final Integer id = comboBox.getItemAt(comboBox
-				        .getSelectedIndex());
-				String password = passwordField.getPassword().toString();
-				
-				Data data = new Administor(id, password);
+				Data data = new Administrator(id, password);
 				if (data.isExist(new SqlHelper())) {
 
-					AdminitorManager adm = new AdminitorManager(UIFactory
-					        .getAdminitorFrame(), id);
-					adm.initAdminitors();
+					AdministartorManager adm = new AdministartorManager(UIFactory
+							.getAdminitorFrame(), id);
 					UIFactory.getAdminitorFrame().setManager(adm);
 					UIFactory.getAdminitorFrame().setVisible(true);
+					adm.initAdminitors();
 
 					PersonnelManager psm = new PersonnelManager(UIFactory
-					        .getPersonnelFrame());
-					psm.initManager();
+							.getPersonnelFrame());
 					UIFactory.getPersonnelFrame().setManager(psm);
 					UIFactory.getPersonnelFrame().setVisible(true);
+					psm.initManager();
 					
 					ClientManager cm = new ClientManager(UIFactory
-					        .getPersonnelFrame());
-					psm.initManager();
+							.getClientFrame());
 					UIFactory.getClientFrame().setManager(cm);
 					UIFactory.getClientFrame().setVisible(true);
-
-					JOptionPane.showConfirmDialog(AccountFrame.this, "µÇÂ¼³É¹¦");
+					cm.initManager();
+					
+					JOptionPane.showMessageDialog(AccountFrame.this, "µÇÂ¼³É¹¦");
 					if (isSave) {
 						manager.addAccount(id, password);
 						manager.saveAllAccount();
 					}
 				} else {
 					JOptionPane.showConfirmDialog(AccountFrame.this,
-					        "id »ò ÃÜÂë´íÎó");
+							"id »ò ÃÜÂë´íÎó");
 				}
 			}
 		});

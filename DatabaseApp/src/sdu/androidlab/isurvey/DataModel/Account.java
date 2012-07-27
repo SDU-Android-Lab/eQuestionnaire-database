@@ -23,12 +23,10 @@ public class Account implements Serializable {
 	
 	public Account() {
 	
-		super();
 	}
 	
 	public Account(Integer account, String password) {
 	
-		super();
 		this.account = account;
 		this.password = password;
 	}

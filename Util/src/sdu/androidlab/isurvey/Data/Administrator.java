@@ -5,6 +5,10 @@
  */
 package sdu.androidlab.isurvey.Data;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import sdu.androidlab.isurvey.Database.SqlHelper;
 import sdu.androidlab.isurvey.Database.annotation.Column;
 import sdu.androidlab.isurvey.Database.annotation.Table;
 
@@ -14,10 +18,10 @@ import sdu.androidlab.isurvey.Database.annotation.Table;
  *
  */
 @Table(name = "administor")
-public class Administor extends BaseData {
+public class Administrator extends BaseData {
 	
 	@Column(name = "aid")
-	public Integer aid;
+	public int aid;
 	@Column(name = "aname")
 	public String aname;
 	@Column(name = "apassword")
@@ -31,7 +35,7 @@ public class Administor extends BaseData {
 	@Column(name = "atell")
 	public String atell;
 	
-	public Administor() {
+	public Administrator() {
 	
 	}
 	
@@ -40,7 +44,7 @@ public class Administor extends BaseData {
 	 * @param aid
 	 * @param apassword
 	 */
-	public Administor(Integer aid, String apassword) {
+	public Administrator(Integer aid, String apassword) {
 	
 		this.aid = aid;
 		this.apassword = apassword;
@@ -52,7 +56,7 @@ public class Administor extends BaseData {
 	 * @param aname
 	 * @param apassword
 	 */
-	public Administor(Integer aid, String aname, String apassword) {
+	public Administrator(Integer aid, String aname, String apassword) {
 	
 		this.aid = aid;
 		this.aname = aname;
@@ -68,7 +72,7 @@ public class Administor extends BaseData {
 	 * @param salary
 	 * @param atell
 	 */
-	public Administor(Integer aid, String aname, String apassword,
+	public Administrator(Integer aid, String aname, String apassword,
 			String adepartment, String apost, Double salary, String atell) {
 	
 		this.aid = aid;
@@ -80,6 +84,39 @@ public class Administor extends BaseData {
 		this.atell = atell;
 	}
 
+	/**
+	 * @see sdu.androidlab.isurvey.Data.BaseData#isExist(sdu.androidlab.isurvey.Database.SqlHelper)
+	 */
+	@Override
+	public boolean isExist(SqlHelper helper) {
+	
+		System.out.println(this);
+		return helper.isExist(this);
+	}
+	
+	/**
+	 * @see sdu.androidlab.isurvey.Data.BaseData#fillData(java.sql.ResultSet)
+	 */
+	@Override
+	public boolean fillData(final ResultSet resultSet) {
+	
+		boolean done = true;
+		try {
+			this.aid = Integer.parseInt(resultSet.getString("aid"));
+			this.aname = resultSet.getString("aname");
+			this.apassword = resultSet.getString("apassword");
+			this.adepartment = resultSet.getString("adepartment");
+			this.apost = resultSet.getString("apost");
+			this.salary = Double.parseDouble(resultSet.getString("salary"));
+			this.atell = resultSet.getString("atell");
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			done = false;
+		}
+		System.out.println("Administrator " + this.toString());
+		return done;
+	}
+	
 	/**
 	 * @see java.lang.Object#toString()
 	 */

@@ -23,7 +23,7 @@ import sdu.androidlab.isurvey.Database.annotation.Column;
 import sdu.androidlab.isurvey.Database.annotation.Table;
 
 /**
- * @author zhenzxie 
+ * @author zhenzxie
  */
 public class SqlHelper {
 	
@@ -445,6 +445,7 @@ public class SqlHelper {
 			boolean temp = statement.execute();
 			if (temp) {
 				resultSet = statement.getResultSet();
+				resultSet.next();
 				int count = resultSet.getInt(1);
 				if (count >= 1)
 					return true;
@@ -454,27 +455,89 @@ public class SqlHelper {
 				return false;
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return false;
 		} finally {
 			ConnectionManager.close(connection, statement, resultSet);
 		}
 	}
-
-	public void query(final Data data, final SqlCallback callback) {
+	
+	public void query(final Class<? extends Data> cl, final SqlCallback callback) {
 	
 		Runnable runnable = new Runnable() {
 			
-			@SuppressWarnings("null")
 			@Override
 			public void run() {
 			
-				if (data == null || callback == null) {
+				if (cl == null || callback == null) {
+					System.out.println(TAG + " Invalid paramaters");
+					return;
+				}
+				
+				Table annotation = cl.getAnnotation(Table.class);
+				String table = annotation.name();
+				
+				StringBuilder builder = null;
+				String sql = null;
+				Connection connection = ConnectionManager.getConnection();
+				Statement statement = null;
+				ResultSet resultSet = null;
+				
+				builder = new StringBuilder("select * from ");
+				builder.append(table);
+				builder.append(" ;");
+				sql = builder.toString();
+				System.out.println(TAG + "  " + sql);
+
+				try {
+					statement = connection.createStatement();
+					boolean temp = statement.execute(sql);
+					List<Data> dataList = new ArrayList<Data>();
+					Data data = null;
+					if (temp) {
+						resultSet = statement.getResultSet();
+						if (resultSet.first()) {
+							do {
+								try {
+									data = cl.newInstance();
+									if (data.fillData(resultSet)) {
+										dataList.add(data);
+									}
+								} catch (InstantiationException
+										| IllegalAccessException e) {
+									e.printStackTrace();
+									callback.onError(new SqlError(e));
+								}
+							} while (resultSet.next());
+						}
+					}
+					callback.onQueryComplete(dataList);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					callback.onError(new SqlError(e));
+				} finally {
+					ConnectionManager.close(connection, statement, resultSet);
+				}
+			}
+		};
+		execute(runnable);
+	}
+
+	public void query(final Data data, final Field[] fis,
+			final SqlCallback callback) {
+	
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+			
+				if (data == null || fis == null || callback == null) {
 					System.out.println(TAG + " Invalid paramaters");
 					return;
 				}
 				
 				Class<? extends Data> cl = data.getClass();
-				Field[] fields = cl.getDeclaredFields();
+				Field[] fields = fis;
 				Table annotation = data.getClass().getAnnotation(Table.class);
 				String table = annotation.name();
 				
@@ -512,7 +575,7 @@ public class SqlHelper {
 					statement = connection.prepareStatement(sql);
 					setValuesNotNull(fields, data, statement, 1);
 					boolean temp = statement.execute();
-					List<Data> dataList = null;
+					List<Data> dataList = new ArrayList<Data>();
 					Data data = null;
 					if (temp) {
 						resultSet = statement.getResultSet();
@@ -541,6 +604,14 @@ public class SqlHelper {
 			}
 		};
 		execute(runnable);
+	}
+
+	@Deprecated
+	public void query(final Data data, final SqlCallback callback) {
+	
+		Class<? extends Data> cl = data.getClass();
+		Field[] fields = cl.getDeclaredFields();
+		query(data, fields, callback);
 	}
 	
 	/**
@@ -631,7 +702,6 @@ public class SqlHelper {
 		executorService.execute(runnable);
 	}
 	
-
 	private void setValues(Field[] fields, Data data,
 			PreparedStatement statement, int i) {
 	
@@ -668,7 +738,6 @@ public class SqlHelper {
 		}
 	}
 	
-
 	private void setValuesNotNull(Field[] fields, Data data,
 			PreparedStatement statement, int i) {
 	

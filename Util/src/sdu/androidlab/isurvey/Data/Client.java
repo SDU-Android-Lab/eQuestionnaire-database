@@ -1,5 +1,8 @@
 package sdu.androidlab.isurvey.Data;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import sdu.androidlab.isurvey.Database.annotation.Column;
 import sdu.androidlab.isurvey.Database.annotation.Table;
 
@@ -12,7 +15,7 @@ import sdu.androidlab.isurvey.Database.annotation.Table;
 public class Client extends BaseData {
 	
 	@Column(name = "cid")
-	public Long cid;
+	public long cid;
 	@Column(name = "email")
 	public String email;
 	@Column(name = "password")
@@ -45,6 +48,32 @@ public class Client extends BaseData {
 		this.street = street;
 		this.phone = phone;
 		this.field = field;
+	}
+
+	/**
+	 * @see sdu.androidlab.isurvey.Data.BaseData#fillData(java.sql.ResultSet)
+	 */
+	@Override
+	public boolean fillData(ResultSet resultSet) {
+	
+		boolean done = true;
+		
+		try {
+			this.cid = resultSet.getLong("cid");
+			this.email = resultSet.getString("email");
+			this.password = resultSet.getString("password");
+			this.companyName = resultSet.getString("companyName");
+			this.province = resultSet.getString("province");
+			this.city = resultSet.getString("city");
+			this.street = resultSet.getString("street");
+			this.phone = resultSet.getString("phone");
+			this.field = resultSet.getString("field");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			done = false;
+		}
+		System.out.println(this.toString());
+		return done;
 	}
 
 	@Override

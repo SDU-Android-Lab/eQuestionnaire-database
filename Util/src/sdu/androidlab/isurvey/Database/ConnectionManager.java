@@ -50,7 +50,7 @@ public class ConnectionManager {
 	
 		try {
 			statement.close();
-			connection.close();
+			// connection.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -62,7 +62,7 @@ public class ConnectionManager {
 		try {
 			resultSet.close();
 			statement.close();
-			connection.close();
+			// connection.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

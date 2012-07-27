@@ -44,15 +44,14 @@ public class QuestionnaireFrame extends BaseFrame {
 	private JLabel cost;
 	private JLabel note;
 	private JButton button;
+	private JScrollPane scrollPane;
 	private Long cid;
 	
 	/**
 	 * Create the frame.
 	 */
-	public QuestionnaireFrame(Long cid) {
+	public QuestionnaireFrame() {
 	
-		this.cid = cid;
-
 		setTitle("\u95EE\u5377");
 	
 		setResizable(true);
@@ -94,9 +93,9 @@ public class QuestionnaireFrame extends BaseFrame {
 					Questionnaire ques = (Questionnaire) manager.getList().get(
 					        index);
 					setQuesInfo(ques);
-					if (table.isShowing()) {
-						manager.showProblem(ques.qid);
-					}
+					button.setText("查看问题");
+					scrollPane.setVisible(false);
+					setBounds(10, 197, 732, 147);
 				}
 			}
 		});
@@ -227,10 +226,20 @@ public class QuestionnaireFrame extends BaseFrame {
 			
 				if (table.isShowing()) {
 					button.setText("查看问题");
-					table.setVisible(false);
+					scrollPane.setVisible(false);
+					setBounds(10, 197, 732, 147);
 				} else {
 					button.setText("隐藏问题");
-					table.setVisible(true);
+					scrollPane.setVisible(true);
+					setBounds(10, 197, 732, 300);
+					int index = comboBox.getSelectedIndex();
+					if (index >= 0) {
+						Questionnaire ques = (Questionnaire) manager.getList()
+								.get(index);
+						if (scrollPane.isShowing()) {
+							manager.showProblem(ques.qid);
+						}
+					}
 				}
 			}
 		});
@@ -241,11 +250,17 @@ public class QuestionnaireFrame extends BaseFrame {
 		panel.add(button, gbc_button);
 		
 		table = new JTable();
-		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane = new JScrollPane(table);
+		scrollPane.setVisible(false);
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
-		
-		manager = new QuestionnarieManager(this, cid);
-		manager.initManager();
+
+		manager = new QuestionnarieManager(this);
+	}
+	
+	public void setCid(Long cid) {
+	
+		this.cid = cid;
+		manager.initManager(cid);
 	}
 
 	/**
@@ -269,24 +284,23 @@ public class QuestionnaireFrame extends BaseFrame {
 		
 		List<Data> pList = manager.getpManager().getList();
 		if (pList != null) {
-			Object[][] objects = new Object[5][pList.size()];
+			Object[][] objects = new Object[pList.size()][5];
 			Problem pro = null;
 			int i = 0;
 			for (Data data : pList) {
 				pro = (Problem) data;
-				objects[0][i] = pro.pid;
+				objects[i][0] = pro.pid;
 				switch (pro.type) {
 					case DatabaseInfo.PRO_JD:
-						objects[1][i] = DatabaseInfo.PRO_JDSTR;
+						objects[i][1] = DatabaseInfo.PRO_JDSTR;
 						break;
 					case DatabaseInfo.PRO_XZ:
-						objects[1][i] = DatabaseInfo.PRO_XZSTR;
+						objects[i][1] = DatabaseInfo.PRO_XZSTR;
 				}
-				objects[2][i] = pro.content;
-				objects[3][i] = pro.image;
-				objects[4][i++] = pro.audio;
+				objects[i][2] = pro.content;
+				objects[i][3] = pro.image;
+				objects[i++][4] = pro.audio;
 			}
-			
 			table.setModel(new DefaultTableModel(objects, new String[] { "Id",
 			        "\u7C7B\u578B", "\u5185\u5BB9", "\u56FE\u7247\u8DEF\u5F84",
 			        "\u97F3\u9891\u8DEF\u5F84" }));
@@ -296,7 +310,7 @@ public class QuestionnaireFrame extends BaseFrame {
 	
 	private void setQuesInfo(Questionnaire ques) {
 	
-		id.setText(ques.qid.toString());
+		id.setText(String.valueOf(ques.qid));
 		createData.setText(ques.createDate.toString());
 		finishData.setText(ques.finishDate.toString());
 		switch(ques.template){

@@ -29,7 +29,7 @@ public class ClientManager extends BaseDataModel {
 	public void initManager() {
 	
 		SqlHelper helper = new SqlHelper();
-		helper.query(new Client(), new SqlCallbackAdapter() {
+		helper.query(Client.class, new SqlCallbackAdapter() {
 			
 			/**
 			 * @see sdu.androidlab.isurvey.Database.SqlCallbackAdapter#onQueryComplete(java.util.List)

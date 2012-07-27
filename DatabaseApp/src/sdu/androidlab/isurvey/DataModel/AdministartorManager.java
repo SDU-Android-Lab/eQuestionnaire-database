@@ -7,7 +7,7 @@ package sdu.androidlab.isurvey.DataModel;
 
 import java.util.List;
 
-import sdu.androidlab.isurvey.Data.Administor;
+import sdu.androidlab.isurvey.Data.Administrator;
 import sdu.androidlab.isurvey.Data.Data;
 import sdu.androidlab.isurvey.Database.SqlCallbackAdapter;
 import sdu.androidlab.isurvey.Database.SqlHelper;
@@ -17,13 +17,13 @@ import sdu.androidlab.isurvey.UI.BaseFrame;
  * @author zhenzxie
  *
  */
-public class AdminitorManager extends BaseDataModel {
+public class AdministartorManager extends BaseDataModel {
 	
-	private Administor self;
+	private Administrator self;
 	private Integer id;
 	private List<Data> other;
 
-	public AdminitorManager(BaseFrame baseFrame, Integer id) {
+	public AdministartorManager(BaseFrame baseFrame, Integer id) {
 	
 		super(baseFrame);
 		this.id = id;
@@ -31,8 +31,9 @@ public class AdminitorManager extends BaseDataModel {
 	
 	public void initAdminitors() {
 		
-		Administor administor = new Administor();
+		Administrator administor = new Administrator();
 		administor.aid = id;
+		System.out.println(administor.toString());
 		
 		SqlHelper helper = new SqlHelper();
 		helper.query(administor, new SqlCallbackAdapter() {
@@ -52,12 +53,12 @@ public class AdminitorManager extends BaseDataModel {
 					        .println("AdminitorManager: datalist's adminitor is null");
 					return;
 				}
-				self = (Administor) dataList.get(0);
+				self = (Administrator) dataList.get(0);
 				notifyDataChange();
 			}
 		});
 		
-		helper.query(new Administor(), new SqlCallbackAdapter() {
+		helper.query(Administrator.class, new SqlCallbackAdapter() {
 			
 			/**
 			 * @see sdu.androidlab.isurvey.Database.SqlCallbackAdapter#onQueryComplete(java.util.List)
@@ -78,7 +79,7 @@ public class AdminitorManager extends BaseDataModel {
 	/**
 	 * @return the self
 	 */
-	public Administor getSelf() {
+	public Administrator getSelf() {
 	
 		return self;
 	}
@@ -87,7 +88,7 @@ public class AdminitorManager extends BaseDataModel {
 	 * @param self
 	 *            the self to set
 	 */
-	public void setSelf(Administor self) {
+	public void setSelf(Administrator self) {
 	
 		this.self = self;
 	}
