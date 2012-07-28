@@ -462,6 +462,7 @@ public class SqlHelper {
 		}
 	}
 	
+	// 查询class对应的表，回调方法中返回包含表中所有数据的list
 	public void query(final Class<? extends Data> cl, final SqlCallback callback) {
 	
 		Runnable runnable = new Runnable() {
@@ -523,6 +524,7 @@ public class SqlHelper {
 		execute(runnable);
 	}
 
+	// 查询Data所对应的表，where语句是使用field指定的属性，和data对象中的值。
 	public void query(final Data data, final Field[] fis,
 			final SqlCallback callback) {
 	
@@ -671,6 +673,7 @@ public class SqlHelper {
 		execute(runnable);
 	}
 
+	// 委托执行一条sql语句
 	public void execute(final String sql, final SqlCallback callback) {
 	
 		Runnable runnable = new Runnable() {
