@@ -22,16 +22,22 @@ public class Administrator extends BaseData {
 	
 	@Column(name = "aid")
 	public int aid;
+
 	@Column(name = "aname")
 	public String aname;
+
 	@Column(name = "apassword")
 	public String apassword;
+
 	@Column(name = "adepartment")
 	public String adepartment;// 绠＄悊鍛橀儴闂�
+
 	@Column(name = "apost")
 	public String apost;// 绠＄悊鍛樿亴浣�
+
 	@Column(name = "salary")
-	public Double salary;
+	public double salary;
+
 	@Column(name = "atell")
 	public String atell;
 	

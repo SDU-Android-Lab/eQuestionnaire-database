@@ -30,7 +30,7 @@ public class Questionnaire extends BaseData {
 	@Column(name = "sampleSize")
 	public Integer sampleSize;// 调查样本数量
 	@Column(name = "cost")
-	public Double cost;// 价格
+	public double cost;// 价格
 	@Column(name = "not")
 	public String note;// 备注
 

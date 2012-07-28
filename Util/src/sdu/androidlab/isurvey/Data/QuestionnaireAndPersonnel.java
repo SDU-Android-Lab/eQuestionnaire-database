@@ -16,11 +16,11 @@ import sdu.androidlab.isurvey.Database.annotation.Table;
 public class QuestionnaireAndPersonnel extends BaseData {
 	
 	@Column(name = "questionnaire_qid")
-	public Integer questionnaire_qid;
+	public int questionnaire_qid;
 	@Column(name = "personnel_id")
-	public Integer personnel_id;
+	public int personnel_id;
 	@Column(name = "count")
-	public Integer count;
+	public int count;
 	
 	/**
 	 * 

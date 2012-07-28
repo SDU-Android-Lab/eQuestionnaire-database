@@ -12,13 +12,13 @@ import sdu.androidlab.isurvey.Database.annotation.Table;
 public class Advertisement extends BaseData {
 
 	@Column(name = "aid")
-	public Long aid;
+	public long aid;
 	@Column(name = "content")
 	public String content;
 	@Column(name = "image")
 	public String image;// 图片路径
 	@Column(name = "")
-	public Long questionnaire_qid;
+	public long questionnaire_qid;
 	
 	public Advertisement() {
 	

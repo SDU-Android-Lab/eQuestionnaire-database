@@ -141,6 +141,7 @@ public class SqlHelper {
 		execute(runnable);
 	}
 	
+	// 更新数据库中某条数据，note：newData中的值都要进行设置即无论和oldData一样的或者和oldData不一样的都要设置
 	public boolean updata(Data oldData, Data newData) {
 	
 		if (oldData == null || newData == null) {
@@ -194,7 +195,7 @@ public class SqlHelper {
 		try {
 			statement = connection.prepareStatement(sql);
 			setValues(fields, newData, statement, 1);
-			setValuesNotNull(fields, oldData, statement, index);
+			setValuesNotNull(fields, oldData, statement, index + 1);
 			statement.execute();
 			return true;
 		} catch (SQLException e) {
@@ -398,15 +399,13 @@ public class SqlHelper {
 		execute(runnable);
 	}
 	
-	public boolean isExist(Data data) {
-	
+	public boolean isExist(Data data, Field[] fis) {
 		if (data == null) {
 			System.out.println(TAG + " Invalid paramaters");
 			return false;
 		}
 		
-		Class<? extends Data> cl = data.getClass();
-		Field[] fields = cl.getDeclaredFields();
+		Field[] fields = fis;
 		Table annotation = data.getClass().getAnnotation(Table.class);
 		String table = annotation.name();
 		
@@ -460,6 +459,17 @@ public class SqlHelper {
 		} finally {
 			ConnectionManager.close(connection, statement, resultSet);
 		}
+	}
+	
+	public boolean isExist(Data data) {
+	
+		if (data == null) {
+			System.out.println(TAG + " Invalid paramaters");
+			return false;
+		}
+		Class<? extends Data> cl = data.getClass();
+		Field[] fields = cl.getDeclaredFields();
+		return isExist(data, fields);
 	}
 	
 	// 查询class对应的表，回调方法中返回包含表中所有数据的list
@@ -713,11 +723,12 @@ public class SqlHelper {
 				try {
 					field.setAccessible(true);
 					Class<?> fieldType = field.getType();
+
 					if ((Integer.TYPE == fieldType)
 							|| (Integer.class == fieldType)) {
 						statement.setInt(i, field.getInt(data));
 					} else if (String.class == fieldType) {
-						statement.setString(i, field.get(data).toString());
+						statement.setString(i, (String) field.get(data));
 					} else if ((Long.TYPE == fieldType)
 							|| (Long.class == fieldType)) {
 						statement.setLong(i, field.getLong(data));

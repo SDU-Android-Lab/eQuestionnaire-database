@@ -5,6 +5,7 @@
  */
 package sdu.androidlab.isurvey.DataModel;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import sdu.androidlab.isurvey.Data.Administrator;
@@ -34,9 +35,16 @@ public class AdministartorManager extends BaseDataModel {
 		Administrator administor = new Administrator();
 		administor.aid = id;
 		System.out.println(administor.toString());
+		Class<Administrator> cl = Administrator.class;
+		Field[] fields = new Field[1];
+		try {
+			fields[0] = cl.getDeclaredField("aid");
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
 		
 		SqlHelper helper = new SqlHelper();
-		helper.query(administor, new SqlCallbackAdapter() {
+		helper.query(administor,fields, new SqlCallbackAdapter() {
 			
 			/**
 			 * @see sdu.androidlab.isurvey.Database.SqlCallbackAdapter#onQueryComplete(java.util.List)

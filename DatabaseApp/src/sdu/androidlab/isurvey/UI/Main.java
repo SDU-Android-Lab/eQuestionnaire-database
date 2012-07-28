@@ -2,15 +2,22 @@ package sdu.androidlab.isurvey.UI;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import org.pushingpixels.substance.api.skin.SubstanceNebulaLookAndFeel;
 
 
 
@@ -21,20 +28,26 @@ public class Main extends JFrame {
      */
 	private static final long serialVersionUID = 3773402147281722185L;
 	private JPanel contentPane;
+	private JDesktopPane desktopPane;
+	private AccountFrame accountFrame;
+	private PersonnelFrame personnelFrame;
+	private AdministartorFrame administartorFrame;
+	private ClientFrame clientFrame;
+	private QuestionnaireFrame questionnaireFrame;
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 	
-		// JFrame.setDefaultLookAndFeelDecorated(true);
-		// JDialog.setDefaultLookAndFeelDecorated(true);
-		//
-		// try {
-		// UIManager.setLookAndFeel(new SubstanceNebulaLookAndFeel());
-		// } catch (Exception e) {
-		// System.out.println("Substance Raven Graphite failed to initialize");
-		// }
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
+		
+		try {
+			UIManager.setLookAndFeel(new SubstanceNebulaLookAndFeel());
+		} catch (Exception e) {
+			System.out.println("Substance Raven Graphite failed to initialize");
+		}
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			
@@ -52,7 +65,7 @@ public class Main extends JFrame {
 	 */
 	public Main() {
 	
-		setTitle("isurvery-\u7535\u5B50\u8C03\u67E5\u95EE\u5377\u7CFB\u7EDF");
+		setTitle("isurvery-\u7535\u5B50\u8C03\u67E5\u95EE\u5377\u7CFB\u7EDF 1.0");
 		// getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 0, 973, 751);
@@ -108,38 +121,138 @@ public class Main extends JFrame {
 		JMenuItem menuItem_7 = new JMenuItem("\u5BA2\u6237\u4FE1\u606F");
 		menuItem_7.setFont(new Font("锟斤拷锟斤拷锟叫匡拷", Font.PLAIN, 18));
 		menu.add(menuItem_7);
+		JMenuItem menuItem_8 = new JMenuItem("问卷信息");
+		menuItem_8.setFont(new Font("锟斤拷锟斤拷锟叫匡拷", Font.PLAIN, 18));
+		menu.add(menuItem_8);
+		
+
+		menuItem.addActionListener(listener);
+		menuItem_1.addActionListener(listener);
+		menuItem_2.addActionListener(listener);
+		menuItem_3.addActionListener(listener);
+		menuItem_4.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				if (!accountFrame.isShowing()) {
+					accountFrame.setVisible(true);
+					try {
+						desktopPane.add(accountFrame);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(Main.this, "现在不能打开");
+					}
+				}
+			}
+		});
+		menuItem_5.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				if (!administartorFrame.isShowing()) {
+					administartorFrame.setVisible(true);
+					try {
+						desktopPane.add(administartorFrame);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(Main.this, "现在不能打开");
+					}
+				}
+			}
+		});
+		menuItem_6.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				if (!personnelFrame.isShowing()) {
+					personnelFrame.setVisible(true);
+					try {
+						desktopPane.add(personnelFrame);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(Main.this, "现在不能打开");
+					}
+				}
+			}
+		});
+		menuItem_7.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				if (!clientFrame.isShowing()) {
+					clientFrame.setVisible(true);
+					try {
+						desktopPane.add(clientFrame);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(Main.this, "现在不能打开");
+					}
+				}
+			}
+		});
+		menuItem_8.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				if (!questionnaireFrame.isShowing()) {
+					questionnaireFrame.setVisible(true);
+					try {
+						desktopPane.add(questionnaireFrame);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(Main.this, "现在不能打开");
+					}
+				}
+			}
+		});
+		
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		JDesktopPane desktopPane = new JDesktopPane();
+		desktopPane = new JDesktopPane();
 		contentPane.add(desktopPane, BorderLayout.CENTER);
 		
-		AccountFrame accountFrame = UIFactory.getAccountFrame();
+		accountFrame = UIFactory.getAccountFrame();
 		accountFrame.setVisible(true);
 		accountFrame.setBounds(10, 10, 332, 189);
 		desktopPane.add(accountFrame);
 		
-		PersonnelFrame personnelFrame = UIFactory.getPersonnelFrame();
+		personnelFrame = UIFactory.getPersonnelFrame();
 		// personnelFrame.setVisible(true);
 		personnelFrame.setBounds(10, 262, 927, 201);
 		desktopPane.add(personnelFrame);
 		
-		AdministartorFrame adminitorFrame = UIFactory.getAdminitorFrame();
+		administartorFrame = UIFactory.getAdminitorFrame();
 		// adminitorFrame.setVisible(true);
-		adminitorFrame.setBounds(364, 10, 573, 242);
-		desktopPane.add(adminitorFrame);
+		administartorFrame.setBounds(364, 10, 573, 242);
+		desktopPane.add(administartorFrame);
 		
-		ClientFrame clientFrame = UIFactory.getClientFrame();
+		clientFrame = UIFactory.getClientFrame();
 		// clientFrame.setVisible(true);
 		clientFrame.setBounds(10, 473, 927, 189);
 		desktopPane.add(clientFrame);
 
-		QuestionnaireFrame questionnaireFrame = UIFactory
+		questionnaireFrame = UIFactory
 				.getQuestionnaireFrame();
 		// questionnaireFrame.setVisible(true);
 		questionnaireFrame.setBounds(10, 197, 732, 147);
 		desktopPane.add(questionnaireFrame);
 	}
+	
+	ActionListener listener = new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		
+			JOptionPane.showMessageDialog(Main.this, "此功能将在2.0版本中支持");
+		}
+	};
 }

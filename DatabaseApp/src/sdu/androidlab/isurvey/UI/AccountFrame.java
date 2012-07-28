@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Observable;
 
@@ -137,8 +138,8 @@ public class AccountFrame extends BaseFrame {
 					id = comboBox.getItemAt(index);
 				} else {
 					try {
-						id = Integer.parseInt((String) comboBox.getEditor()
-								.getItem());
+						id = Integer.parseInt(comboBox.getEditor().getItem()
+								.toString());
 					} catch (Exception e1) {
 						e1.printStackTrace();
 						JOptionPane.showConfirmDialog(AccountFrame.this,
@@ -146,13 +147,23 @@ public class AccountFrame extends BaseFrame {
 					}
 				}
 				String password = new String(passwordField.getPassword());
-				System.out.println(id + "   " + password+"   "+index);
+				System.out.println(id + "   " + password + "   " + index);
 				
 				Data data = new Administrator(id, password);
-				if (data.isExist(new SqlHelper())) {
+				Class<Administrator> cl = Administrator.class;
+				Field[] fields = new Field[2];
+				try {
+					fields[0] = cl.getDeclaredField("aid");
+					fields[1] = cl.getDeclaredField("apassword");
+				} catch (NoSuchFieldException | SecurityException e1) {
+					e1.printStackTrace();
+				}
+				SqlHelper helper = new SqlHelper();
 
-					AdministartorManager adm = new AdministartorManager(UIFactory
-							.getAdminitorFrame(), id);
+				if (helper.isExist(data, fields)) {
+					
+					AdministartorManager adm = new AdministartorManager(
+							UIFactory.getAdminitorFrame(), id);
 					UIFactory.getAdminitorFrame().setManager(adm);
 					UIFactory.getAdminitorFrame().setVisible(true);
 					adm.initAdminitors();

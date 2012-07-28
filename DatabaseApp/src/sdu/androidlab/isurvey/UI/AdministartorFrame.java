@@ -24,7 +24,6 @@ import javax.swing.table.DefaultTableModel;
 import sdu.androidlab.isurvey.Data.Administrator;
 import sdu.androidlab.isurvey.Data.Data;
 import sdu.androidlab.isurvey.DataModel.AdministartorManager;
-import sdu.androidlab.isurvey.Database.SqlHelper;
 
 public class AdministartorFrame extends BaseFrame {
 	
@@ -89,9 +88,9 @@ public class AdministartorFrame extends BaseFrame {
 		gbl_panel.columnWidths = new int[] { 77, 76, 115, 104, 129, 0 };
 		gbl_panel.rowHeights = new int[] { 15, 29, 25, 25, 30, 29, 0 };
 		gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-		        Double.MIN_VALUE };
+				Double.MIN_VALUE };
 		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-		        Double.MIN_VALUE };
+				Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblid = new JLabel("\u6211\u7684 Id\uFF1A");
@@ -229,21 +228,31 @@ public class AdministartorFrame extends BaseFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 			
-				int option = JOptionPane.showConfirmDialog(AdministartorFrame.this,
- "您真的要修改吗");
-				if (option == JOptionPane.OK_OPTION) {
-					Administrator administor = new Administrator();
-					administor.aname = name.getText();
-					administor.apassword = password.getText();
-					administor.atell = tell.getText();
-					SqlHelper helper = new SqlHelper();
-					helper.updata(manager.getSelf(), administor);
-				} else {
-					Administrator self = manager.getSelf();
-					name.setText(self.aname);
-					tell.setText(self.atell);
-					password.setText(self.apassword);
-				}
+				JOptionPane.showMessageDialog(AdministartorFrame.this,
+						"此功能将在2.0版本支持");
+				return;
+				// int option = JOptionPane.showConfirmDialog(
+				// AdministartorFrame.this, "您真的要修改吗");
+				// if (option == JOptionPane.OK_OPTION) {
+				// Administrator administor = new Administrator();
+				// Administrator old = manager.getSelf();
+				//
+				// administor.aid = old.aid;
+				// administor.aname = name.getText();
+				// administor.apassword = password.getText();
+				// administor.salary = old.salary;
+				// administor.atell = tell.getText();
+				// administor.adepartment = old.adepartment;
+				// administor.apost = old.apost;
+				//
+				// SqlHelper helper = new SqlHelper();
+				// helper.updata(manager.getSelf(), administor);
+				// } else {
+				// Administrator self = manager.getSelf();
+				// name.setText(self.aname);
+				// tell.setText(self.atell);
+				// password.setText(self.apassword);
+				// }
 			}
 		});
 		confirm.setFont(new Font("华文行楷", Font.PLAIN, 18));
@@ -297,8 +306,8 @@ public class AdministartorFrame extends BaseFrame {
 				}
 			}
 			table.setModel(new DefaultTableModel(objects, new String[] { "Id",
-			        "\u540D\u79F0", "\u6240\u5C5E\u90E8\u95E8", "\u804C\u4F4D",
-			        "\u7535\u8BDD" }));
+					"\u540D\u79F0", "\u6240\u5C5E\u90E8\u95E8", "\u804C\u4F4D",
+					"\u7535\u8BDD" }));
 		}
 	}
 

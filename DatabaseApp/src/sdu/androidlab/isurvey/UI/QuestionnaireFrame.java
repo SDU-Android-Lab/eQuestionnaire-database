@@ -324,7 +324,7 @@ public class QuestionnaireFrame extends BaseFrame {
 				template.setText(DatabaseInfo.QUES_TEMPLATESTR3);
 		}
 		simpleSize.setText(ques.sampleSize + " ทÝ");
-		cost.setText(ques.cost.toString() + " ิช");
+		cost.setText(ques.cost + " ิช");
 		note.setText(ques.note);
 	}
 	

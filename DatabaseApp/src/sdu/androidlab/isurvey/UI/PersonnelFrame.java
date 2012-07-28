@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -80,6 +81,9 @@ public class PersonnelFrame extends BaseFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 			
+				JOptionPane.showMessageDialog(PersonnelFrame.this,
+						"此功能将在2.0版本支持");
+				return;
 			}
 		});
 		btnadd.setFont(new Font("华文行楷", Font.PLAIN, 16));
@@ -89,7 +93,10 @@ public class PersonnelFrame extends BaseFrame {
 		btndelete.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-
+			
+				JOptionPane.showMessageDialog(PersonnelFrame.this,
+						"此功能将在2.0版本支持");
+				return;
 			}
 		});
 		btndelete.setFont(new Font("华文行楷", Font.PLAIN, 16));

@@ -36,7 +36,7 @@ public class Personnel extends BaseData {
 	@Column(name = "tell")
 	public String tell;
 	@Column(name = "salary")
-	public Double salary;
+	public double salary;
 	@Column(name = "administor_aid")
 	public Integer administor_aid;
 	

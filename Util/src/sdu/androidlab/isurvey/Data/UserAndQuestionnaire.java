@@ -20,7 +20,7 @@ public class UserAndQuestionnaire extends BaseData {
 	@Column(name = "questionnaire_qid")
 	public String questionnaire_qid;
 	@Column(name = "count")
-	public Integer count;
+	public int count;
 	
 	/**
 	 * 

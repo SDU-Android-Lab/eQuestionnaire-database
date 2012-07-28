@@ -30,8 +30,9 @@ public final class UIFactory {
 	 */
 	public static synchronized final AccountFrame getAccountFrame() {
 	
-		if (accountFrame == null)
+		if (accountFrame == null) {
 			accountFrame = new AccountFrame();
+		}
 		return accountFrame;
 	}
 	
@@ -40,8 +41,9 @@ public final class UIFactory {
 	 */
 	public static synchronized final AdministartorFrame getAdminitorFrame() {
 	
-		if (adminitorFrame == null)
+		if (adminitorFrame == null) {
 			adminitorFrame = new AdministartorFrame();
+		}
 		return adminitorFrame;
 	}
 	
@@ -50,8 +52,9 @@ public final class UIFactory {
 	 */
 	public static synchronized final ClientFrame getClientFrame() {
 	
-		if (clientFrame == null)
+		if (clientFrame == null) {
 			clientFrame = new ClientFrame();
+		}
 		return clientFrame;
 	}
 	
@@ -60,15 +63,17 @@ public final class UIFactory {
 	 */
 	public static synchronized final PersonnelFrame getPersonnelFrame() {
 	
-		if (personnelFrame == null)
+		if (personnelFrame == null) {
 			personnelFrame = new PersonnelFrame();
+		}
 		return personnelFrame;
 	}
 
 	public static QuestionnaireFrame getQuestionnaireFrame() {
 	
-		if (questionnaireFrame == null)
+		if (questionnaireFrame == null) {
 			questionnaireFrame = new QuestionnaireFrame();
+		}
 		return questionnaireFrame;
 	}
 

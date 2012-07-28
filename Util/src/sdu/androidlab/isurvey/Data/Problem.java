@@ -18,11 +18,11 @@ public class Problem extends BaseData {
 	public long pid;
 	@Column(name = "ptype")
 	// TODO:change this to type
-	public Integer type;// 问题类型，选择题还是简答题
+	public int type;// 问题类型，选择题还是简答题
 	@Column(name = "content")
 	public String content;
 	@Column(name = "choiceSize")
-	public Integer choiceSize;
+	public int choiceSize;
 	@Column(name = "image")
 	public String image;// 图片的路径
 	@Column(name = "audio")
