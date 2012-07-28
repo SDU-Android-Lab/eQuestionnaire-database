@@ -19,6 +19,8 @@ import sdu.androidlab.isurvey.Database.annotation.Table;
 @Table(name = "user")
 public class User extends BaseData {
 	
+	@Column(name = "uid")
+	int uid;
 	@Column(name = "uname")
 	String uname;
 	@Column(name = "upassword")
@@ -42,6 +44,17 @@ public class User extends BaseData {
 
 	/**
 	 * 
+	 * @param uid
+	 * @param upassword
+	 */
+	public User(int uid, String upassword) {
+	
+		this.uid = uid;
+		this.upassword = upassword;
+	}
+	
+	/**
+	 * 
 	 * @param uname
 	 */
 	public User(String uname, String upassword) {
@@ -51,6 +64,7 @@ public class User extends BaseData {
 	}
 
 	/**
+	 * @param uid
 	 * @param uname
 	 * @param upassword
 	 * @param uemail
@@ -60,10 +74,11 @@ public class User extends BaseData {
 	 * @param utell
 	 * @param point
 	 */
-	public User(String uname, String upassword, String uemail,
+	public User(int uid,String uname, String upassword, String uemail,
 			String uprovince, String ucity, String ustreet, String utell,
 			int point) {
 	
+		this.uid = uid;
 		this.uname = uname;
 		this.upassword = upassword;
 		this.uemail = uemail;
